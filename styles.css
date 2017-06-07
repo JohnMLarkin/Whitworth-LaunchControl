@@ -1,0 +1,27 @@
+html, body {
+  font-family: 'Roboto', 'Helvetica', sans-serif;
+}
+
+.launch-drawer {
+  border: none;
+}
+
+.launch-navigation {
+  flex-grow: 1;
+}
+.launch-layout .launch-navigation .mdl-navigation__link {
+  display: flex !important;
+  flex-direction: row;
+  align-items: center;
+  color: rgba(255, 255, 255, 0.56);
+  font-weight: 500;
+}
+.launch-layout .launch-navigation .mdl-navigation__link:hover {
+  background-color: #00ACD4;
+  color: #37474F;
+}
+.launch-navigation .mdl-navigation__link .material-icons {
+  font-size: 24px;
+  color: rgba(255, 255, 255, 0.56);
+  margin-right: 16px;
+}

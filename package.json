@@ -1,0 +1,30 @@
+{
+  "name": "whitworth-launch-control",
+  "version": "0.1.0",
+  "description": "Configure high altitude balloon Command Module and experiment pods",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron .",
+    "install": "electron-rebuild"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JohnMLarkin/Whitworth-LaunchControl.git"
+  },
+  "author": "John M. Larkin",
+  "email": "jlarkin@whitworth.edu",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/JohnMLarkin/Whitworth-LaunchControl/issues"
+  },
+  "homepage": "https://github.com/JohnMLarkin/Whitworth-LaunchControl#readme",
+  "devDependencies": {
+    "electron": "^1.4.13",
+    "electron-rebuild": "^1.4.13"
+  },
+  "dependencies": {
+    "data-table": "^2.0.0",
+    "serialport": "^4.0.7"
+  }
+}
