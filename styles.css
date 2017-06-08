@@ -35,7 +35,7 @@ html, body {
 }
 
 .vertical-mdl-tabs {
-    margin-top: 10px;
+    margin-top: 0px;
 }
 .vertical-mdl-tabs .mdl-tabs__tab-bar {
     -webkit-flex-direction: column;
@@ -75,16 +75,12 @@ html, body {
 
 .vertical-mdl-tabs.mdl-tabs.is-upgraded .mdl-tabs__panel.is-active, .mdl-tabs__panel {
     padding: 0 0px;
+    padding-left: 0;
 }
 
 .vertical-mdl-tabs.mdl-tabs .mdl-tabs__tab {
     text-align: left;
 }
-
-.main {
-  color: #000000;
-}
-
 
 .mdl-switch__label .material-icons {
   color: #9E9E9E;
@@ -92,4 +88,20 @@ html, body {
 
 .mdl-switch__input:active .mdl-switch__label .material-icons {
   color: #2196F3;
+}
+
+.mdl-list__item {
+  font-size: 16px;
+}
+
+.tab-header {
+  color: #FFFFFF;
+  background-color: #303F9F;
+  height: 40px;
+  padding-top: 10px;
+  padding-left: 10px;
+}
+
+.command-charts {
+  align-items: center;
 }

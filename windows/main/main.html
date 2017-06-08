@@ -3,16 +3,72 @@
   <head>
     <meta charset="utf-8">
     <title>Near Space Launch Control</title>
-    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700" type="text/css">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto" type="text/css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-light_blue.min.css" />
     <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
     <link rel="stylesheet" href="../../styles.css">
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+       google.charts.load('current', {'packages':['gauge']});
+       google.charts.setOnLoadCallback(drawCommandVoltageGauge);
+       google.charts.setOnLoadCallback(drawCommandTemperatureGauges);
+
+       function drawCommandVoltageGauge() {
+
+         var data = google.visualization.arrayToDataTable([
+           ['Label', 'Value'],
+           ['Voltage', 7.4],
+         ]);
+
+         var options = {
+           max: 12,
+           minorTicks: 3,
+           greenFrom: 7.0, greenTo: 12,
+           yellowFrom: 6.0, yellowTo: 7.0,
+           redFrom: 0.0, redTo: 6.0
+         };
+
+         var chart = new google.visualization.Gauge(document.getElementById('cmdVoltGauge'));
+
+         chart.draw(data, options);
+
+         setInterval(function() {
+           data.setValue(0, 1, 7.0 + Math.round(30 * Math.random())/10.0);
+           chart.draw(data, options);
+         }, 13000);
+       }
+
+       function drawCommandTemperatureGauges() {
+
+         var data = google.visualization.arrayToDataTable([
+           ['Label', 'Value'],
+           ['External', 55],
+           ['Internal', 35]
+         ]);
+
+         var options = {
+           min: -50,
+           max: 100,
+         };
+
+         var chart = new google.visualization.Gauge(document.getElementById('cmdTempGauges'));
+
+         chart.draw(data, options);
+
+         setInterval(function() {
+           data.setValue(1, 1, 40 + Math.round(20 * Math.random()));
+           data.setValue(0, 1, -40 + Math.round(80 * Math.random()));
+           chart.draw(data, options);
+         }, 13000);
+       }
+     </script>
   </head>
   <body>
-    <div class="control-tabs mdl-tabs vertical-mdl-tabs mdl-js-tabs mdl-js-ripple-effect mdl-color--indigo-800">
+    <div class="control-tabs mdl-tabs vertical-mdl-tabs mdl-js-tabs mdl-js-ripple-effect mdl-color--indigo-900">
       <div class="mdl-grid mdl-grid--no-spacing">
-        <div class="mdl-cell mdl-cell--2-col">
+        <div class="mdl-cell mdl-cell--2-col mdl-grid--no-spacing">
           <div class="mdl-tabs__tab-bar">
             <a href="#command-tab" class="mdl-tabs__tab is-active">
               <i class="mdl-color-text--indigo-100 material-icons" role="presentation">home</i>Command Module
@@ -28,89 +84,86 @@
             </a>
           </div>
         </div>
-        <div class="mdl-cell mdl-cell--10-col mdl-grid mdl-grid--no-spacing">
+        <div class="mdl-cell mdl-cell--10-col mdl-color--grey-100 mdl-grid--no-spacing">
           <div class="mdl-tabs__panel is-active" id="command-tab">
-            <div class="launch-layout mdl-layout mdl-js-layout mdl-layout--fixed header mdl-cell--10-col">
-              <header class="launch-header mdl-layout__header">
-                <div class="mdl-layout__header-row">
-                  <span class="mdl-layout-title">Command Module</span>
-                </div>
-              </header>
-              <main class="mdl-layout__content mdl-color--grey-100">
-                <div class="mdl-cell mdl-cell--2-col mdl-color-text--black mdl-shadow--2dp">
-                  <ul class="comm-list-icon mdl-list">
-                    <li class="mdl-list__item">
-                      <span class="mdl-list__item-primary-content">
-                        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="switch-BT">
-                          <input type="checkbox" id="switch-BT" class="mdl-switch__input">
-                          <span class="mdl-switch__label"><i class="material-icons">bluetooth</i>Bluetooth</span>
-                        </label>
-                      </span>
-                    </li>
-                    <li class="mdl-list__item">
-                      <span class="mdl-list__item-primary-content">
-                        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="switch-GPS">
-                          <input type="checkbox" id="switch-GPS" class="mdl-switch__input">
-                          <span class="mdl-switch__label"><i class="material-icons">gps_fixed</i>GPS</span>
-                        </label>
-                      </span>
-                    </li>
-                    <li class="mdl-list__item">
-                      <span class="mdl-list__item-primary-content">
-                        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="switch-Iridium">
-                          <input type="checkbox" id="switch-Iridium" class="mdl-switch__input">
-                          <span class="mdl-switch__label"><i class="material-icons">router</i>Iridium</span>
-                        </label>
-                      </span>
-                    </li>
-                  </ul>
-                </div>
-                <div class="mdl-cell mdl-cell--7-col">
-                  Something
-                </div>
-                <div class="mdl-cell mdl-cell--10-col">
-                  <div id="error"></div>
-                  <div id="ports"></div>
-                </div>
-              </main>
+            <div class="mdl-grid mdl-grid--no-spacing">
+              <div class="tab-header mdl-cell mdl-cell--12-col mdl-grid--no-spacing">
+                <span class="mdl-layout-title">Command Module</span>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col mdl-color-text--black mdl-shadow--2dp">
+                <ul class="comm-list-icon mdl-list mdl-font">
+                  <li class="mdl-list__item">
+                    <span class="mdl-list__item-primary-content">
+                      <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="switch-GPS">
+                        <input type="checkbox" id="switch-GPS" class="mdl-switch__input">
+                        <span class="mdl-switch__label"><i class="material-icons">gps_fixed</i>GPS</span>
+                      </label>
+                    </span>
+                  </li>
+                  <li class="mdl-list__item">
+                    <span class="mdl-list__item-primary-content">
+                      <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="switch-Iridium">
+                        <input type="checkbox" id="switch-Iridium" class="mdl-switch__input">
+                        <span class="mdl-switch__label"><i class="material-icons">swap_vert</i>Satellite link</span>
+                      </label>
+                    </span>
+                  </li>
+                  <li class="mdl-list__item">
+                    <span class="mdl-list__item-primary-content">
+                      <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="switch-BT">
+                        <input type="checkbox" id="switch-BT" class="mdl-switch__input">
+                        <span class="mdl-switch__label"><i class="material-icons">swap_horiz</i>Pod link</span>
+                      </label>
+                    </span>
+                  </li>
+                </ul>
+              </div>
+              <div class="commandCharts mdl-cell mdl-cell--1-col" style="padding-left: 10px; align-content: center;">
+                <h6 style="text-align: center;">Battery</h6>
+                <div id="cmdVoltGauge"></div>
+              </div>
+              <div class="commandCharts mdl-cell mdl-cell--2-col" style="padding-left: 10px; align-content: center;">
+                <h6 style="text-align: center;">Temperature (Celsius)</h6>
+                <div id="cmdTempGauges"></div>
+              </div>
+              <div class="mdl-cell mdl-cell--10-col mdl-shadow--2dp">
+                <div id="error"></div>
+                <div id="ports"></div>
+              </div>
             </div>
           </div>
           <div class="mdl-tabs__panel" id="configure-tab">
-            <div class="launch-layout mdl-layout mdl-js-layout mdl-layout--fixed header mdl-cell--10-col">
-              <header class="launch-header mdl-layout__header">
-                <div class="mdl-layout__header-row">
-                  <span class="mdl-layout-title">Configure Payload</span>
+            <div class="mdl-grid mdl-grid--no-spacing">
+              <div class="tab-header mdl-cell mdl-cell--12-col mdl-grid--no-spacing">
+                <span class="mdl-layout-title">Configure Payload</span>
+              </div>
+              <div>
+                  Pending: ability to specify data to be received from each pod
                 </div>
-              </header>
-              <main class="mdl-layout__content mdl-color--grey-100">
-                Stunning content goes here!
-              </main>
+              </div>
             </div>
-          </div>
-          <div class="mdl-tabs__panel" id="monitor-tab">
-            <div class="launch-layout mdl-layout mdl-js-layout mdl-layout--fixed header mdl-cell--10-col">
-              <header class="launch-header mdl-layout__header">
-                <div class="mdl-layout__header-row">
+            <div class="mdl-tabs__panel" id="monitor-tab">
+              <div class="mdl-grid mdl-grid--no-spacing">
+                <div class="tab-header mdl-cell mdl-cell--12-col mdl-grid--no-spacing">
                   <span class="mdl-layout-title">Monitor Payload</span>
                 </div>
-              </header>
-              <main class="mdl-layout__content mdl-color--grey-100">
-                Stunning content goes here!
-              </main>
+                <div>
+                  Pending: ability to monitor data received from each pod
+                </div>
+              </div>
             </div>
-          </div>
-          <div class="mdl-tabs__panel" id="launch-tab">
-            <div class="launch-layout mdl-layout mdl-js-layout mdl-layout--fixed header mdl-cell--10-col">
-              <header class="launch-header mdl-layout__header">
-                <div class="mdl-layout__header-row">
+            <div class="mdl-tabs__panel" id="launch-tab">
+              <div class="mdl-grid mdl-grid--no-spacing">
+                <div class="tab-header mdl-cell mdl-cell--12-col mdl-grid--no-spacing">
                   <span class="mdl-layout-title">Launch</span>
                 </div>
-              </header>
-              <main class="mdl-layout__content mdl-color--grey-100">
-                Stunning content goes here!
-              </main>
+                <div>
+                  Pending: finalize mission configuration and transmit to server
+                </div>
+              </div>
             </div>
           </div>
+      </div>
     </div>
   </body>
   <script>
