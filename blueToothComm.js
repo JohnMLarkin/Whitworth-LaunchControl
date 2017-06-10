@@ -4,6 +4,7 @@
 
 const serialport = require('serialport')
 
+var btCount = 0;
 var portFound = false;
 var myPort = new serialport('COM1', {autoOpen: false}); // just a dummy
 
@@ -11,6 +12,18 @@ var myPort = new serialport('COM1', {autoOpen: false}); // just a dummy
 function autoDetectPort() {
   serialport.list(function (err, ports) {
     ports.forEach(function(port) {
+      console.log("For " + port.comName + " search is " + port.pnpId.search("BTHENUM"));
+      if (port.pnpId.search("BTHENUM")==0) {
+        btCount++;
+        if ((btCount==2) && !portFound) {
+          myPort = new serialport(port.comName, {
+            autoOpen: false,
+            baudRate: 115200,
+            parser: serialport.parsers.readline("\r\n")
+          });
+          portFound = true;
+        }
+      }
       if ((port.manufacturer == 'mbed') &&  !portFound) {
         myPort = new serialport(port.comName, {
           autoOpen: false,
