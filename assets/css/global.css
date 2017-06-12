@@ -1,0 +1,82 @@
+:root {
+  --color-pri:          #263238;
+  --color-pri-subtle:   #455A64;
+  --color-pri-strong:   #0D47A1;
+  --color-pri-border:   #0D47A1;
+  --color-pri-bg:      #CFD8DC;
+  --color-pri-bg-subtle:  #ECEFF1;
+
+  --color-sec:          #BBDEFB;
+  --color-sec-subtle:   #C5CAE9;
+  --color-sec-strong:   #FFFFFF;
+  --color-sec-border:   #3F51B5;
+  --color-sec-bg:      #1A237E;
+  --color-sec-bg-subtle:  #283593;
+
+  --color-accent:       #2196F3;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+  font-family: 'Roboto', 'Helvetica', sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  overflow: hidden;
+  color: var(--color-pri);
+  background-color:  var(--color-pri-bg);
+}
+
+body {
+  margin:  0;
+  height:  100%;
+  display:  flex;
+}
+
+a {
+  color:  var(--color-accent);
+}
+
+h1, h2, h3 {
+  margin-top: 0;
+  line-height: 1.5;
+}
+
+h1 {
+  font-size: 1.5em;
+  font-weight: 600;
+}
+
+h2 {
+  font-size: 1.3em;
+  font-weight: normal;
+}
+
+h3 {
+  font-size: 1.12em;
+  font-weight: 600;
+}
+
+.u-avoid-clicks {
+  pointer-events: none;
+}
+
+.no-display {
+  display: none;
+}
+
+.content {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  visibility: hidden;
+  opacity: 0;
+}
+
+.content.is-shown {
+  visiblity: visible;
+  opacity: 1;
+}
