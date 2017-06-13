@@ -9,9 +9,9 @@ var mainWindow = null
 
 function createWindow () {
   var windowOptions = {
-    width: 1080,
+    width: 1900,
     minWidth: 680,
-    height: 840,
+    height: 1000,
   }
 
   mainWindow = new BrowserWindow(windowOptions)

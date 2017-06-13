@@ -1,0 +1,12 @@
+.subsection-box th {
+  color: var(--color-pri-strong);
+  font-weight: 600;
+}
+
+.subsection-box td {
+  color: var(--color-pri-subtle);
+}
+
+.subsection-box .mdl-data-table {
+  margin-bottom: 0.5em;
+}

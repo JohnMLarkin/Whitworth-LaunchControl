@@ -12,7 +12,62 @@
         <button id="missionSummary-toggle" class="js-container-target subsection-toggle-button">Mission summary
         </button>
         <div class="subsection-box">
-          <p>A summary of the mission short-burst-data configuration will appear here.
+          <form action="#">
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+              <input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="missionID">
+              <label class="mdl-textfield__label" for="missionID">Mission ID</label>
+              <span class="mdl-textfield__error">Input is not a number!</span>
+            </div>
+          </form>
+          <form action="#">
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+              <textarea class="mdl-textfield__input" type="text" rows="1" maxrows="3" id="missionDescription"></textarea>
+              <label class="mdl-textfield__label" for="missionDescription">Mission Description</label>
+            </div>
+          </form>
+          <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+            <thead>
+              <tr>
+                <th class="mdl-data-table__cell--non-numeric">Pod</th>
+                <th>Number of Bytes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="mdl-data-table__cell--non-numeric">Command</td>
+                <td id="cmdSize"></td>
+              </tr>
+              <tr>
+                <td class="mdl-data-table__cell--non-numeric">Pod 1</td>
+                <td id="pod1Size"></td>
+              </tr>
+              <tr>
+                <td class="mdl-data-table__cell--non-numeric">Pod 2</td>
+                <td id="pod2Size"></td>
+              </tr>
+              <tr>
+                <td class="mdl-data-table__cell--non-numeric">Pod 3</td>
+                <td id="pod3Size"></td>
+              </tr>
+              <tr>
+                <td class="mdl-data-table__cell--non-numeric">Pod 4</td>
+                <td id="pod4Size"></td>
+              </tr>
+              <tr>
+                <td class="mdl-data-table__cell--non-numeric">Pod 5</td>
+                <td id="pod5Size"></td>
+              </tr>
+              <tr>
+                <td class="mdl-data-table__cell--non-numeric">Pod 6</td>
+                <td id="pod6Size"></td>
+              </tr>
+              <tr>
+                <th class="mdl-data-table__cell--non-numeric">Total</th>
+                <th id="missionSize"></th>
+              </tr>
+            </tbody>
+          </table>
+          <p>The satellite modem can transmit a maximum of 340 bytes per message.</p>
         </div>
       </div>
     </div>
@@ -21,7 +76,27 @@
         <button id="pod1Configure-toggle" class="js-container-target subsection-toggle-button">Configure pod 1
         </button>
         <div class="subsection-box">
-          <p>Controls for specifying pod 1 data transmitted to the command module will be here.
+          <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp" id="pod1Table">
+            <thead>
+              <tr>
+                <th class="mdl-data-table__cell--non-numeric">Item</th>
+                <th class="mdl-data-table__cell--non-numeric">Description</th>
+                <th class="mdl-data-table__cell--non-numeric">Type</th>
+                <th>Bytes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th class="mdl-data-table__cell--non-numeric">Total</th>
+                <th class="mdl-data-table__cell--non-numeric">&mdash;</td>
+                <th class="mdl-data-table__cell--non-numeric">&mdash;</td>
+                <th id="pod1Total"></th>
+              </tr>
+            </tbody>
+          </table>
+          <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored mdl-js-ripple-effect">
+            <i class="material-icons">add</i>
+          </button>
         </div>
       </div>
     </div>
@@ -71,7 +146,7 @@
       </div>
     </div>
     <script type="text/javascript">
-
+      require('./renderer-process/configure')
     </script>
 
   </section>

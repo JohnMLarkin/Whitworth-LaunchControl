@@ -91,6 +91,7 @@
   position: relative;
   padding-left: 1em;
   padding-top: 0.5em;
+  padding-bottom: 0.5em;
   margin-top: 0.5em;
   margin-bottom: 0.5em;
   border-radius: 6px;
@@ -109,6 +110,11 @@
 
 .subsection-box > p:first-child {
   margin-top: 0;
+}
+
+.subsection-box h3 {
+  font-size: 1.12em;
+  color: var(--color-pri-strong);
 }
 
 .subsection-box h5 {

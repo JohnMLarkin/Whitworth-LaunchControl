@@ -72,5 +72,5 @@ if (sectionId) {
   if (section) section.click()
 } else {
   activateDefaultSection()
-  document.querySelector('#command').classList.add('is-shown')
+  document.querySelector('button-command').classList.add('is-shown')
 }

@@ -18,7 +18,8 @@ function drawCommandVoltageGauge() {
     minorTicks: 3,
     greenFrom: 7.0, greenTo: 12,
     yellowFrom: 6.0, yellowTo: 7.0,
-    redFrom: 0.0, redTo: 6.0
+    redFrom: 0.0, redTo: 6.0,
+    height: 120, width: 120
   };
 
   var chart = new google.visualization.Gauge(document.getElementById('cmdVoltGauge'));
@@ -42,6 +43,7 @@ function drawCommandTemperatureGauges() {
   var options = {
     min: -50,
     max: 100,
+    height: 120, width: 240
   };
 
   var chart = new google.visualization.Gauge(document.getElementById('cmdTempGauges'));
