@@ -1,3 +1,13 @@
+.subsection {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.subsection.is-shown {
+  visibility: visible;
+  opacity: 1;
+}
+
 .subsection-box th {
   color: var(--color-pri-strong);
   font-weight: 600;
@@ -9,4 +19,8 @@
 
 .subsection-box .mdl-data-table {
   margin-bottom: 0.5em;
+}
+
+.subsection-box .mdl-tooltip {
+  margin-left: -300px;
 }

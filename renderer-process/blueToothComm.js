@@ -12,7 +12,7 @@ var myPort = new serialport('COM1', {autoOpen: false}); // just a dummy
 function autoDetectPort() {
   serialport.list(function (err, ports) {
     ports.forEach(function(port) {
-      console.log("For " + port.comName + " search is " + port.pnpId.search("BTHENUM"));
+      //console.log("For " + port.comName + " search is " + port.pnpId.search("BTHENUM"));
       if (port.pnpId.search("BTHENUM")==0) {
         btCount++;
         if ((btCount==2) && !portFound) {
