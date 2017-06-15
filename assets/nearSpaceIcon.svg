@@ -1,0 +1,23 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
+   "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+   <g id="cvpage1_top" width="612px" height="792px" transform="translate(0,0)">
+      <rect x="0px" y="0px" width="612px" height="792px" fill="#FFFFFF" stroke="none" />
+      <path d="M 259.2 100.8 C 259.2 81.053 242.947 64.8 223.2 64.8 C 203.453 64.8 187.2 81.053 187.2 100.8 " fill="none" stroke="#FFF" stroke-width="2px" stroke-miterlimit="14.336" />
+      <path d="M 223.2 151.2 C 215.379 145.714 215.423 146.78 208.8 144 C 204.196 142.068 198.605 136.598 194.975 131.934 C 188.91 124.141 187.2 112.508 187.2 100.8 " fill="none" stroke="#FFF" stroke-width="2px" stroke-miterlimit="14.336" />
+      <path d="M 223.2 151.2 C 231.021 145.714 230.977 146.78 237.6 144 C 242.204 142.068 247.796 136.598 251.425 131.934 C 257.49 124.141 259.2 112.508 259.2 100.8 " fill="none" stroke="#FFF" stroke-width="2px" stroke-miterlimit="14.336" />
+      <line x1="223.2px" y1="151.2px" x2="223.2px" y2="172.8px" fill="none" stroke="#FFF" />
+      <polyline points="223.2,172.8 221.093,180.115 219.877,187.165 " fill="none" stroke="#FFF" stroke-width="0.75px" />
+      <polyline points="223.159,172.7 226.441,180.237 228.386,187.895 " fill="none" stroke="#FFF" stroke-width="0.75px" />
+      <polyline points="219.999,186.801 222.43,186.436 225.347,187.773 228.386,187.53 " fill="none" stroke="#FFF" stroke-width="0.75px" />
+      <line x1="223.042px" y1="194.315px" x2="217.752px" y2="216.46px" fill="none" stroke="#FFF" stroke-width="0.75px" />
+      <rect x="210.676px" y="214.42px" width="14.4px" height="14.4px" transform="rotate(15,210.676,214.42)" fill="none" stroke="#FFF" stroke-width="2px" stroke-miterlimit="14.336" />
+      <line x1="213.812px" y1="229.792px" x2="204.439px" y2="250.253px" fill="none" stroke="#FFF" stroke-width="0.75px" />
+      <rect x="197.488px" y="247.354px" width="14.4px" height="14.4px" transform="rotate(20,197.488,247.354)" fill="none" stroke="#FFF" stroke-width="2px" stroke-miterlimit="14.336" />
+      <line x1="219.999px" y1="187.044px" x2="223.159px" y2="194.337px" fill="none" stroke="#FFF" stroke-width="0.75px" />
+      <line x1="228.264px" y1="187.652px" x2="223.159px" y2="194.337px" fill="none" stroke="#FFF" stroke-width="0.75px" />
+      <line x1="224.375px" y1="187.044px" x2="223.037px" y2="194.216px" fill="none" stroke="#FFF" stroke-width="0.75px" />
+   </g>
+</svg>

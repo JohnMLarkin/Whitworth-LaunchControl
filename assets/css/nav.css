@@ -1,5 +1,5 @@
 .nav {
-  width: 340px;
+  width: 280px;
   overflow-x: hidden;
   overflow-y: auto;
   color: var(--color-sec-subtle);
@@ -34,7 +34,7 @@
 }
 
 .nav-header-icon {
-  position: absolute;
+  /* position: absolute; */
   width: 36px;
   height: 36px;
   top: 1.5rem;
@@ -76,7 +76,7 @@
 .nav-button.is-selected {
   background-color: var(--color-accent);
   color:  var(--color-sec-strong);
-  font-weight:  600;
+  /* font-weight:  600; */
 }
 
 .nav-button.is-selected:focus {
