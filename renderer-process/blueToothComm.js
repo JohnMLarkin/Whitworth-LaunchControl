@@ -35,7 +35,7 @@ function autoDetectPort() {
     });
     if (portFound) {
       myPort.on('open', showPortOpen);
-      myPort.on('data', sendSerialData);
+      myPort.on('data', receiveSerialData);
       myPort.on('close', showPortClose);
       myPort.on('error', showError);
       myPort.open();
@@ -52,7 +52,7 @@ function showPortOpen() {
   document.getElementById('modemConsole').innerHTML =  logLines.join("<br>");
 }
 
-function sendSerialData(data) {
+function receiveSerialData(data) {
   if (logLines.length>maxLines) logLines.shift();
   logLines.push(data);
   document.getElementById('modemConsole').innerHTML =  logLines.join("<br>");

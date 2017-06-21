@@ -1,5 +1,5 @@
-const BrowserWindow = require('electron').remote.BrowserWindow
-const path = require('path')
+/* const BrowserWindow = require('electron').remote.BrowserWindow */
+/* const path = require('path') */
 const settings = require('electron-settings')
 
 var numBytesPods = [22, 0, 0, 0, 0, 0, 0];
@@ -45,6 +45,11 @@ function setMissionId(event) {
   if (settings.has('missions.'+id.toString())) { // Load saved mission if exists
     descriptionField.value = settings.get('missions.'+id.toString()+'.description');
 
+    for (i=1; i<=numPods; i++) {
+      descriptionField = document.getElementById("pod"+i.toString()+"Description");
+      descriptionField.value = settings.get('missions.'+id.toString()+'.pod'+i.toString()+'description');
+    }
+
     // Need to trigger floating label to "float" when value set by code
     var mdlInputs = document.querySelectorAll('.mdl-js-textfield');
     for (var j = 0, l = mdlInputs.length; j < l; j++) {
@@ -54,6 +59,10 @@ function setMissionId(event) {
   } else { // Save mission if it doesn't exist yet
     settings.set('missions.'+id.toString()+'.description', descriptionField.value)
     settings.set('missions.'+id.toString()+'.podTable', podTable)
+    for (i=1; i<=numPods; i++) {
+      descriptionField = document.getElementById("pod"+i.toString()+"Description");
+      settings.set('missions.'+id.toString()+'.pod'+i.toString()+'description', descriptionField.value);
+    }
   }
   updatePodTables();
 }
@@ -157,6 +166,13 @@ function changeMissionDescription(event) {
   settings.set('missions.'+id.toString()+'.description', descriptionField.value);
 }
 
+function changePodDescription(event, pod) {
+  var idField = document.getElementById("missionID");
+  var id = idField.value;
+  var descriptionField = document.getElementById("pod"+pod.toString()+"Description");
+  settings.set('missions.'+id.toString()+'.pod'+pod.toString()+'description', descriptionField.value);
+}
+
 function changeDataType(event, pod, item) {
   var itemCode = document.getElementById('pod'+pod.toString()+'item'+item.toString()+'Type');
   podTable[pod-1][item-1][2] = itemCode.value;
@@ -256,6 +272,19 @@ missionIDEntry.addEventListener('change', setMissionId.bind(null, event), false)
 
 const missionDescriptionEntry = document.getElementById('missionDescription');
 missionDescriptionEntry.addEventListener('change', changeMissionDescription.bind(null, event), false);
+
+const pod1DescriptionEntry = document.getElementById('pod1Description');
+pod1DescriptionEntry.addEventListener('change', changePodDescription.bind(null, event, 1), false);
+const pod2DescriptionEntry = document.getElementById('pod2Description');
+pod2DescriptionEntry.addEventListener('change', changePodDescription.bind(null, event, 2), false);
+const pod3DescriptionEntry = document.getElementById('pod3Description');
+pod3DescriptionEntry.addEventListener('change', changePodDescription.bind(null, event, 3), false);
+const pod4DescriptionEntry = document.getElementById('pod4Description');
+pod4DescriptionEntry.addEventListener('change', changePodDescription.bind(null, event, 4), false);
+const pod5DescriptionEntry = document.getElementById('pod5Description');
+pod5DescriptionEntry.addEventListener('change', changePodDescription.bind(null, event, 5), false);
+const pod6DescriptionEntry = document.getElementById('pod6Description');
+pod6DescriptionEntry.addEventListener('change', changePodDescription.bind(null, event, 6), false);
 
 const addPod1ItemBtn = document.getElementById('addPod1Item');
 addPod1ItemBtn.addEventListener('click', insertItem.bind(null,event, 1), false);
