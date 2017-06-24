@@ -13,7 +13,7 @@
           <li class="mdl-list__item">
             <span class="mdl-list__item-primary-content">
               <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="switch-GPS">
-                <input type="checkbox" id="switch-GPS" class="mdl-switch__input">
+                <input type="checkbox" id="switch-GPS" class="mdl-switch__input" checked>
                 <span class="mdl-switch__label"><i class="material-icons">gps_fixed</i>GPS</span>
               </label>
             </span>
@@ -21,7 +21,7 @@
           <li class="mdl-list__item">
             <span class="mdl-list__item-primary-content">
               <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="switch-Iridium">
-                <input type="checkbox" id="switch-Iridium" class="mdl-switch__input">
+                <input type="checkbox" id="switch-Iridium" class="mdl-switch__input" checked>
                 <span class="mdl-switch__label"><i class="material-icons">swap_vert</i>Satellite link</span>
               </label>
             </span>
@@ -56,10 +56,32 @@
           </div>
         </div>
       </div>
-      <div class="mdl-cell mdl-cell--9-col mdl-shadow--2dp">
-        <!--
-          More content goes here
-        -->
+      <div class="mdl-cell mdl-cell--3-col mdl-shadow--2dp" style="padding-left: 10px; text-align: center;">
+        <h6>Location
+          <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored mdl-js-ripple-effect" id="button-GPS_update" disabled>
+            <i class="material-icons">place</i>
+          </button>
+        </h6>
+        <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp" style="margin: auto;">
+          <tbody>
+            <tr>
+              <td class="mdl-data-table__cell--non-numeric">Latitude</td>
+              <td id="latitude"></td>
+              <td class="mdl-data-table__cell--non-numeric">degrees</td>
+            </tr>
+            <tr>
+              <td class="mdl-data-table__cell--non-numeric">Longitude</td>
+              <td id="longitude"></td>
+              <td class="mdl-data-table__cell--non-numeric">degrees</td>
+            </tr>
+            <tr>
+              <td class="mdl-data-table__cell--non-numeric">Altitude</td>
+              <td id="altitude"></td>
+              <td class="mdl-data-table__cell--non-numeric">m</td>
+            </tr>
+          </tbody>
+        </table>
+
       </div>
       <div class="mdl-cell mdl-cell--5-col mdl-shadow--2dp mdl-color--indigo-600">
         <div style="text-align: center; color: #FFFFFF; font-size: 16px; height: 22px; padding-top: 6px;">Command Module Log</div>

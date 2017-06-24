@@ -3,9 +3,11 @@ function handleGPSswitch(event) {
   if (event.target.checked) {
     myPort.write("GPS ON\r\n");
     logLines.push('> GPS ON');
+    document.getElementById('button-GPS_update').disabled = false;
   } else {
     myPort.write("GPS OFF\r\n");
     logLines.push('> GPS OFF');
+    document.getElementById('button-GPS_update').disabled = true;
   }
   document.getElementById('modemConsole').innerHTML =  logLines.join("<br>");
 }
@@ -19,11 +21,11 @@ function handleIridiumSwitch(event) {
     myPort.write("SATLINK OFF\r\n");
     logLines.push('> SATLINK OFF');
   }
+  while (logLines.length>maxLines) logLines.shift();
   document.getElementById('modemConsole').innerHTML =  logLines.join("<br>");
 }
 
 function handlePodSwitch(event) {
-  if (logLines.length>maxLines) logLines.shift();
   if (event.target.checked) {
     myPort.write("PODLINK ON\r\n");
     logLines.push('> PODLINK ON');
@@ -31,6 +33,7 @@ function handlePodSwitch(event) {
     myPort.write("PODLINK OFF\r\n");
     logLines.push('> PODLINK OFF');
   }
+  while (logLines.length>maxLines) logLines.shift();
   document.getElementById('modemConsole').innerHTML =  logLines.join("<br>");
 }
 
@@ -43,6 +46,7 @@ function handleRadioSwitch(event) {
     myPort.write("RADIO OFF\r\n");
     logLines.push('> RADIO OFF');
   }
+  while (logLines.length>maxLines) logLines.shift();
   document.getElementById('modemConsole').innerHTML =  logLines.join("<br>");
 }
 
@@ -57,3 +61,16 @@ podSwitch.addEventListener('click', handlePodSwitch, false);
 
 const radioSwitch = document.getElementById('switch-Radio900');
 radioSwitch.addEventListener('click', handleRadioSwitch, false);
+
+const updateGPSbutton = document.getElementById('button-GPS_update');
+updateGPSbutton.addEventListener('click', updatePosition, false)
+
+function updatePosition(event) {
+  if (gpsSwitch.checked) {
+    myPort.write("GPSDATA\r\n");
+    logLines.push('> GPSDATA');
+    while (logLines.length>maxLines) logLines.shift();
+    document.getElementById('modemConsole').innerHTML =  logLines.join("<br>");
+    waitingForGPSData = true;
+  }
+}
