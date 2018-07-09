@@ -42,8 +42,6 @@ function autoDetectPort() {
       myPort.on('close', showPortClose);
       myPort.on('error', showError);
       myPort.open();
-      document.getElementById('switch-XBee').disabled = false;
-      document.getElementById('button-GPS_update').disabled = false;
     }
   });
 }
@@ -55,6 +53,8 @@ function showPortOpen() {
   while (logLines.length>maxLines) logLines.shift();
   logLines.push('Port open with data rate ' + myPort.options.baudRate + ' baud');
   document.getElementById('modemConsole').innerHTML =  logLines.join("<br>");
+  document.getElementById('switch-XBee').disabled = false;
+  document.getElementById('button-GPS_update').disabled = false;
 }
 
 function receiveSerialData(data) {
@@ -93,6 +93,8 @@ function showError(error) {
   while (logLines.length>maxLines) logLines.shift();
   logLines.push('Serial port error: ' + error);
   portFound = false;
+  document.getElementById('switch-XBee').disabled = false;
+  document.getElementById('button-GPS_update').disabled = true;
   document.getElementById('modemConsole').innerHTML =  logLines.join("<br>");
 }
 
