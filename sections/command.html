@@ -1,0 +1,97 @@
+<template class="task-template">
+  <section id="command-section" class="section js-section">
+    <header class="section-header">
+      <div class="section-wrapper">
+        <h2>
+          <i class="material-icons" role="presentation">home</i>Command Module
+        </h2>
+      </div>
+    </header>
+    <div class="mdl-grid mdl-grid--no-spacing">
+      <div class="mdl-cell mdl-cell--2-col mdl-color-text--black mdl-shadow--2dp">
+        <ul class="comm-list-icon mdl-list">
+          <li class="mdl-list__item">
+            <span class="mdl-list__item-primary-content">
+              <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="switch-GPS">
+                <input type="checkbox" id="switch-GPS" class="mdl-switch__input" checked>
+                <span class="mdl-switch__label"><i class="material-icons">gps_fixed</i>GPS</span>
+              </label>
+            </span>
+          </li>
+          <li class="mdl-list__item">
+            <span class="mdl-list__item-primary-content">
+              <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="switch-Iridium">
+                <input type="checkbox" id="switch-Iridium" class="mdl-switch__input" checked>
+                <span class="mdl-switch__label"><i class="material-icons">swap_vert</i>Satellite link</span>
+              </label>
+            </span>
+          </li>
+          <li class="mdl-list__item">
+            <span class="mdl-list__item-primary-content">
+              <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="switch-XBee">
+                <input type="checkbox" id="switch-XBee" class="mdl-switch__input">
+                <span class="mdl-switch__label"><i class="material-icons">swap_horiz</i>Pod link</span>
+              </label>
+            </span>
+          </li>
+          <li class="mdl-list__item">
+            <span class="mdl-list__item-primary-content">
+              <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="switch-Radio900">
+                <input type="checkbox" id="switch-Radio900" class="mdl-switch__input">
+                <span class="mdl-switch__label"><i class="material-icons">router</i>Radio link</span>
+              </label>
+            </span>
+          </li>
+        </ul>
+      </div>
+      <div class="mdl-cell mdl-cell--3-col mdl-shadow--2dp">
+        <div class="mdl-grid mdl-grid--no-spacing">
+          <div class="commandCharts mdl-cell mdl-cell--4-col" style="padding-left: 10px; align-content: center;">
+            <h6 style="text-align: center;">Battery</h6>
+            <div id="cmdVoltGauge"></div>
+          </div>
+          <div class="commandCharts mdl-cell mdl-cell--8-col" style="padding-left: 10px; align-content: center;">
+            <h6 style="text-align: center;">Temperature (&deg;C)</h6>
+            <div id="cmdTempGauges"></div>
+          </div>
+        </div>
+      </div>
+      <div class="mdl-cell mdl-cell--3-col mdl-shadow--2dp" style="padding-left: 10px; text-align: center;">
+        <h6>Location
+          <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored mdl-js-ripple-effect" id="button-GPS_update" disabled>
+            <i class="material-icons">place</i>
+          </button>
+        </h6>
+        <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp" style="margin: auto;">
+          <tbody>
+            <tr>
+              <td class="mdl-data-table__cell--non-numeric">Latitude</td>
+              <td id="latitude"></td>
+              <td class="mdl-data-table__cell--non-numeric">degrees</td>
+            </tr>
+            <tr>
+              <td class="mdl-data-table__cell--non-numeric">Longitude</td>
+              <td id="longitude"></td>
+              <td class="mdl-data-table__cell--non-numeric">degrees</td>
+            </tr>
+            <tr>
+              <td class="mdl-data-table__cell--non-numeric">Altitude</td>
+              <td id="altitude"></td>
+              <td class="mdl-data-table__cell--non-numeric">m</td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+      <div class="mdl-cell mdl-cell--5-col mdl-shadow--2dp mdl-color--indigo-600">
+        <div style="text-align: center; color: #FFFFFF; font-size: 16px; height: 22px; padding-top: 6px;">Command Module Log</div>
+        <div id="modemConsole" style="background-color: #000000; color: #90CAF9; padding: 10px; height: 600px; overflow: auto;"></div>
+      </div>
+    </div>
+    <script type="text/javascript">
+      require('./renderer-process/commandCharts')
+      require('./renderer-process/commandSwitches')
+    </script>
+
+  </section>
+</template>

@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Near Space Launch Control</title>
+
+  <!-- External resources -->
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto" type="text/css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-light_blue.min.css">
+  <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script src="renderer-process/blueToothComm.js"></script>
+
+  <link rel="stylesheet" href="assets/css/global.css">
+  <link rel="stylesheet" href="assets/css/nav.css">
+  <link rel="stylesheet" href="assets/css/section.css">
+  <link rel="stylesheet" href="assets/css/subsection.css">
+  <link rel="stylesheet" href="assets/css/command.css">
+  <link rel="stylesheet" href="assets/css/configure.css">
+
+  <link rel="import" href="sections/command.html">
+  <link rel="import" href="sections/configure.html">
+  <link rel="import" href="sections/monitor.html">
+  <link rel="import" href="sections/launch.html">
+</head>
+
+<body>
+  <nav class="nav js-nav">
+    <header class="nav-header">
+      <h1 class="nav-title">Near Space<br><strong>Launch Control</strong></h1>
+    </header>
+
+    <div class="nav-item">
+      <button type="button" id="button-command" data-section="command" class="nav-button">
+        <i class="material-icons" role="presentation">home</i>Command Module
+      </button>
+    </div>
+    <div class="nav-item">
+      <button type="button" id="button-configure" data-section="configure" class="nav-button">
+        <i class="material-icons" role="presentation">assignment</i>Configure Mission
+      </button>
+    </div>
+    <div class="nav-item">
+      <button type="button" id="button-monitor" data-section="monitor" class="nav-button">
+        <i class="material-icons" role="presentation">settings_input_antenna</i>Monitor Payload
+      </button>
+    </div>
+    <div class="nav-item">
+      <button type="button" id="button-launch" data-section="launch" class="nav-button">
+        <i class="material-icons" role="presentation">flight_takeoff</i>Launch
+      </button>
+    </div>
+  </nav>
+
+  <main class="content js-content"></main>
+
+  <script>
+    require('./assets/imports')
+    require('./assets/nav')
+    require('./assets/subsection-btns')
+  </script>
+</body>
+</html>

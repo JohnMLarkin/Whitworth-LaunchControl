@@ -1,0 +1,357 @@
+<template class="task-template">
+  <section id="configure-section" class="section js-section">
+    <header class="section-header">
+      <div class="section-wrapper">
+        <h2>
+          <i class="material-icons" role="presentation">assignment</i>Configure Mission
+        </h2>
+      </div>
+    </header>
+    <div class="mdl-grid mdl-grid--no-spacing" style="padding-left: 2rem">
+      <div class="mdl-cell mdl-cell--2-col">
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width: 150px">
+          <input class="mdl-textfield__input" type="text" pattern="[0-9]{1,3}" id="missionID">
+          <label class="mdl-textfield__label" for="missionID">Mission ID</label>
+          <span class="mdl-textfield__error">Must be a non-negative integer less than 1000</span>
+        </div>
+      </div>
+      <div class="mdl-cell mdl-cell--6-col">
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+          <input class="mdl-textfield__input" type="text" style="width: 450px" id="missionDescription"></input>
+          <label class="mdl-textfield__label" for="missionDescription">Mission Description</label>
+        </div>
+      </div>
+    </div>
+    <div class="subsection">
+      <div class="subsection-wrapper">
+        <button id="missionSummary-toggle" class="js-container-target subsection-toggle-button">Mission summary
+        </button>
+        <div class="subsection-box">
+          <div class="mdl-grid mdl-grid--no-spacing">
+            <div class="mdl-cell mdl-cell--3-col">
+              <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+                <thead>
+                  <tr>
+                    <th class="mdl-data-table__cell--non-numeric">Pod</th>
+                    <th>Number of Bytes</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="mdl-data-table__cell--non-numeric">Command</td>
+                    <td id="cmdSize"></td>
+                  </tr>
+                  <tr>
+                    <td class="mdl-data-table__cell--non-numeric">Pod 1</td>
+                    <td id="pod1Size"></td>
+                  </tr>
+                  <tr>
+                    <td class="mdl-data-table__cell--non-numeric">Pod 2</td>
+                    <td id="pod2Size"></td>
+                  </tr>
+                  <tr>
+                    <td class="mdl-data-table__cell--non-numeric">Pod 3</td>
+                    <td id="pod3Size"></td>
+                  </tr>
+                  <tr>
+                    <td class="mdl-data-table__cell--non-numeric">Pod 4</td>
+                    <td id="pod4Size"></td>
+                  </tr>
+                  <tr>
+                    <td class="mdl-data-table__cell--non-numeric">Pod 5</td>
+                    <td id="pod5Size"></td>
+                  </tr>
+                  <tr>
+                    <td class="mdl-data-table__cell--non-numeric">Pod 6</td>
+                    <td id="pod6Size"></td>
+                  </tr>
+                  <tr>
+                    <th class="mdl-data-table__cell--non-numeric">Total</th>
+                    <th id="missionSize"></th>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="mdl-cell mdl-cell--5-col">
+              <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp" id="dataTypeTable">
+                <thead>
+                  <tr>
+                    <th class="mdl-data-table__cell--non-numeric">Type</th>
+                    <th class="mdl-data-table__cell--non-numeric">mbed Type</th>
+                    <th>Bytes</th>
+                    <th class="mdl-data-table__cell--non-numeric">Range</th>
+                  </tr>
+                </thead>
+                <tbody>
+                </tbody>
+              </table>
+            </div>
+            <div class="mdl-cell mdl-cell--3-col">
+              <ul>
+                <li>The satellite modem can transmit a maximum of <strong>340 bytes</strong> per message.</li>
+                <li>If a pod is transmitting data, then the total bytes sent also includes one specifying the number of data bytes.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="subsection">
+      <div class="subsection-wrapper">
+        <button id="pod1Configure-toggle" class="js-container-target subsection-toggle-button">Configure pod 1
+        </button>
+        <div class="subsection-box">
+          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <input class="mdl-textfield__input" type="text" style="width: 450px" id="pod1Description"></input>
+            <label class="mdl-textfield__label" for="pod1Description">Pod Description</label>
+          </div>
+          <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp" id="pod1Table">
+            <thead>
+              <tr>
+                <th class="mdl-data-table__cell--non-numeric">Item</th>
+                <th class="mdl-data-table__cell--non-numeric">Label</th>
+                <th class="mdl-data-table__cell--non-numeric">Type</th>
+                <th>Bytes</th>
+                <th class="mdl-data-table__cell--non-numeric"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th class="mdl-data-table__cell--non-numeric">Total</th>
+                <th class="mdl-data-table__cell--non-numeric">(data only)</th>
+                <th class="mdl-data-table__cell--non-numeric">&mdash;</th>
+                <th id="pod1Total"></th>
+                <th class="mdl-data-table__cell--non-numeric">
+                  <button class="mdl-button mdl-js-button mdl-button--icon" id="clearPod1Items">
+                    <i class="material-icons">delete_sweep</i>
+                  </button>
+                  <span class="mdl-tooltip mdl-tooltip--right" data-mdl-for="clearPod1Items">
+                    Delete all items
+                  </span>
+                </th>
+              </tr>
+            </tbody>
+          </table>
+          <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored mdl-js-ripple-effect" id="addPod1Item">
+            <i class="material-icons">add</i>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="subsection">
+      <div class="subsection-wrapper">
+        <button id="pod2Configure-toggle" class="js-container-target subsection-toggle-button">Configure pod 2
+        </button>
+        <div class="subsection-box">
+          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <input class="mdl-textfield__input" type="text" style="width: 450px" id="pod2Description"></input>
+            <label class="mdl-textfield__label" for="pod2Description">Pod Description</label>
+          </div>
+          <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp" id="pod2Table">
+            <thead>
+              <tr>
+                <th class="mdl-data-table__cell--non-numeric">Item</th>
+                <th class="mdl-data-table__cell--non-numeric">Label</th>
+                <th class="mdl-data-table__cell--non-numeric">Type</th>
+                <th>Bytes</th>
+                <th class="mdl-data-table__cell--non-numeric"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th class="mdl-data-table__cell--non-numeric">Total</th>
+                <th class="mdl-data-table__cell--non-numeric">(data only)</th>
+                <th class="mdl-data-table__cell--non-numeric">&mdash;</th>
+                <th id="pod2Total"></th>
+                <th class="mdl-data-table__cell--non-numeric">
+                  <button class="mdl-button mdl-js-button mdl-button--icon" id="clearPod2Items">
+                    <i class="material-icons">delete_sweep</i>
+                  </button>
+                  <span class="mdl-tooltip mdl-tooltip--right" data-mdl-for="clearPod2Items">
+                    Delete all items
+                  </span>
+                </th>
+              </tr>
+            </tbody>
+          </table>
+          <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored mdl-js-ripple-effect" id="addPod2Item">
+            <i class="material-icons">add</i>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="subsection">
+      <div class="subsection-wrapper">
+        <button id="pod3Configure-toggle" class="js-container-target subsection-toggle-button">Configure pod 3
+        </button>
+        <div class="subsection-box">
+          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <input class="mdl-textfield__input" type="text" style="width: 450px" id="pod3Description"></input>
+            <label class="mdl-textfield__label" for="pod3Description">Pod Description</label>
+          </div>
+          <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp" id="pod3Table">
+            <thead>
+              <tr>
+                <th class="mdl-data-table__cell--non-numeric">Item</th>
+                <th class="mdl-data-table__cell--non-numeric">Label</th>
+                <th class="mdl-data-table__cell--non-numeric">Type</th>
+                <th>Bytes</th>
+                <th class="mdl-data-table__cell--non-numeric"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th class="mdl-data-table__cell--non-numeric">Total</th>
+                <th class="mdl-data-table__cell--non-numeric">(data only)</th>
+                <th class="mdl-data-table__cell--non-numeric">&mdash;</th>
+                <th id="pod3Total"></th>
+                <th class="mdl-data-table__cell--non-numeric">
+                  <button class="mdl-button mdl-js-button mdl-button--icon" id="clearPod3Items">
+                    <i class="material-icons">delete_sweep</i>
+                  </button>
+                  <span class="mdl-tooltip mdl-tooltip--right" data-mdl-for="clearPod3Items">
+                    Delete all items
+                  </span>
+                </th>
+              </tr>
+            </tbody>
+          </table>
+          <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored mdl-js-ripple-effect" id="addPod3Item">
+            <i class="material-icons">add</i>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="subsection">
+      <div class="subsection-wrapper">
+        <button id="pod4Configure-toggle" class="js-container-target subsection-toggle-button">Configure pod 4
+        </button>
+        <div class="subsection-box">
+          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <input class="mdl-textfield__input" type="text" style="width: 450px" id="pod4Description"></input>
+            <label class="mdl-textfield__label" for="pod4Description">Pod Description</label>
+          </div>
+          <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp" id="pod4Table">
+            <thead>
+              <tr>
+                <th class="mdl-data-table__cell--non-numeric">Item</th>
+                <th class="mdl-data-table__cell--non-numeric">Label</th>
+                <th class="mdl-data-table__cell--non-numeric">Type</th>
+                <th>Bytes</th>
+                <th class="mdl-data-table__cell--non-numeric"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th class="mdl-data-table__cell--non-numeric">Total</th>
+                <th class="mdl-data-table__cell--non-numeric">(data only)</th>
+                <th class="mdl-data-table__cell--non-numeric">&mdash;</th>
+                <th id="pod4Total"></th>
+                <th class="mdl-data-table__cell--non-numeric">
+                  <button class="mdl-button mdl-js-button mdl-button--icon" id="clearPod4Items">
+                    <i class="material-icons">delete_sweep</i>
+                  </button>
+                  <span class="mdl-tooltip mdl-tooltip--right" data-mdl-for="clearPod4Items">
+                    Delete all items
+                  </span>
+                </th>
+              </tr>
+            </tbody>
+          </table>
+          <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored mdl-js-ripple-effect" id="addPod4Item">
+            <i class="material-icons">add</i>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="subsection">
+      <div class="subsection-wrapper">
+        <button id="pod5Configure-toggle" class="js-container-target subsection-toggle-button">Configure pod 5
+        </button>
+        <div class="subsection-box">
+          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <input class="mdl-textfield__input" type="text" style="width: 450px" id="pod5Description"></input>
+            <label class="mdl-textfield__label" for="pod5Description">Pod Description</label>
+          </div>
+          <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp" id="pod5Table">
+            <thead>
+              <tr>
+                <th class="mdl-data-table__cell--non-numeric">Item</th>
+                <th class="mdl-data-table__cell--non-numeric">Label</th>
+                <th class="mdl-data-table__cell--non-numeric">Type</th>
+                <th>Bytes</th>
+                <th class="mdl-data-table__cell--non-numeric"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th class="mdl-data-table__cell--non-numeric">Total</th>
+                <th class="mdl-data-table__cell--non-numeric">(data only)</th>
+                <th class="mdl-data-table__cell--non-numeric">&mdash;</th>
+                <th id="pod5Total"></th>
+                <th class="mdl-data-table__cell--non-numeric">
+                  <button class="mdl-button mdl-js-button mdl-button--icon" id="clearPod5Items">
+                    <i class="material-icons">delete_sweep</i>
+                  </button>
+                  <span class="mdl-tooltip mdl-tooltip--right" data-mdl-for="clearPod5Items">
+                    Delete all items
+                  </span>
+                </th>
+              </tr>
+            </tbody>
+          </table>
+          <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored mdl-js-ripple-effect" id="addPod5Item">
+            <i class="material-icons">add</i>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="subsection">
+      <div class="subsection-wrapper">
+        <button id="pod6Configure-toggle" class="js-container-target subsection-toggle-button">Configure pod 6
+        </button>
+        <div class="subsection-box">
+          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <input class="mdl-textfield__input" type="text" style="width: 450px" id="pod6Description"></input>
+            <label class="mdl-textfield__label" for="pod6Description">Pod Description</label>
+          </div>
+          <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp" id="pod6Table">
+            <thead>
+              <tr>
+                <th class="mdl-data-table__cell--non-numeric">Item</th>
+                <th class="mdl-data-table__cell--non-numeric">Label</th>
+                <th class="mdl-data-table__cell--non-numeric">Type</th>
+                <th>Bytes</th>
+                <th class="mdl-data-table__cell--non-numeric"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th class="mdl-data-table__cell--non-numeric">Total</th>
+                <th class="mdl-data-table__cell--non-numeric">(data only)</th>
+                <th class="mdl-data-table__cell--non-numeric">&mdash;</th>
+                <th id="pod6Total"></th>
+                <th class="mdl-data-table__cell--non-numeric">
+                  <button class="mdl-button mdl-js-button mdl-button--icon" id="clearPod6Items">
+                    <i class="material-icons">delete_sweep</i>
+                  </button>
+                  <span class="mdl-tooltip mdl-tooltip--right" data-mdl-for="clearPod6Items">
+                    Delete all items
+                  </span>
+                </th>
+              </tr>
+            </tbody>
+          </table>
+          <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored mdl-js-ripple-effect" id="addPod6Item">
+            <i class="material-icons">add</i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      require('./renderer-process/configure')
+    </script>
+
+  </section>
+</template>
