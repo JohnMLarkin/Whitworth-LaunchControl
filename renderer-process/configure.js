@@ -2,7 +2,7 @@
 /* const path = require('path') */
 const settings = require('electron-settings')
 
-var numBytesPods = [22, 0, 0, 0, 0, 0, 0];
+var numBytesPods = [28, 0, 0, 0, 0, 0, 0];
 var podTable = [[],[],[],[],[],[]];
 const numPods = podTable.length;
 var dataTypes = [['uint8','char',1,'0 .. 255'],
