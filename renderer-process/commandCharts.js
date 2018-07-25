@@ -10,7 +10,7 @@ function drawCommandVoltageGauge() {
 
   var data = google.visualization.arrayToDataTable([
     ['Label', 'Value'],
-    ['Voltage', 7.4],
+    ['Voltage', batteryVoltage],
   ]);
 
   var options = {
@@ -27,17 +27,17 @@ function drawCommandVoltageGauge() {
   chart.draw(data, options);
 
   setInterval(function() {
-    data.setValue(0, 1, 7.0 + Math.round(30 * Math.random())/10.0);
+    data.setValue(0, 1, batteryVoltage);
     chart.draw(data, options);
-  }, 13000);
+  }, 10000);
 }
 
 function drawCommandTemperatureGauges() {
 
   var data = google.visualization.arrayToDataTable([
     ['Label', 'Value'],
-    ['External', 55],
-    ['Internal', 35]
+    ['External', externalTemperature],
+    ['Internal', internalTemperature]
   ]);
 
   var options = {
@@ -51,8 +51,8 @@ function drawCommandTemperatureGauges() {
   chart.draw(data, options);
 
   setInterval(function() {
-    data.setValue(1, 1, 40 + Math.round(20 * Math.random()));
-    data.setValue(0, 1, -40 + Math.round(80 * Math.random()));
+    data.setValue(1, 1, internalTemperature);
+    data.setValue(0, 1, externalTemperature);
     chart.draw(data, options);
-  }, 13000);
+  }, 10000);
 }
