@@ -1,20 +1,12 @@
 /* const BrowserWindow = require('electron').remote.BrowserWindow */
 /* const path = require('path') */
-const settings = require('electron-settings')
+const settings = require('electron-settings');
 
+const dataTypes = require('./dataTypes');
 
-var numBytesPods = [28, 0, 0, 0, 0, 0, 0];
+var numBytesPods = [27, 0, 0, 0, 0, 0, 0];
 var podTable = [[],[],[],[],[],[]];
 const numPods = podTable.length;
-var dataTypes = [['uint8','char',1,'0 .. 255'],
-  ['int8','signed char',1,'-128 .. 127'],
-  ['uint16','unsigned short',2,'0 .. 65,535'],
-  ['int16','short',2,'-32,768 .. 32,767'],
-  ['uint32','unsigned int',4,'0 .. 4,294,967,295'],
-  ['int32','int',4,'-2,147,483,648 .. 2,147,483,647'],
-  ['float','float',4,'-3.4E38 .. 3.4E38'],
-  ['double','double',8,'-1.7E308 .. 1.7E308']
-];
 
 function populateDataTypeTable() {
   var table = document.getElementById('dataTypeTable');
@@ -133,7 +125,7 @@ function updateByteTable() {
   }
   var missionTotal = numBytesPods.reduce(sum);
   document.getElementById('missionSize').innerHTML = missionTotal;
-  if (missionTotal>34) {
+  if (missionTotal>340) {
     document.getElementById('missionSize').style.color = 'red';
   } else
     document.getElementById('missionSize').style.color = 'initial';

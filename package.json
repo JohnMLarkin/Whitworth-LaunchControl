@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "data-table": "^2.0.0",
+    "getmdl-select": "^2.0.1",
     "serialport": "^6.2.2"
   }
 }
