@@ -1,15 +1,21 @@
 const settings = require('electron-settings');
+const request = require('request');
 
 const dataTypes = require('./dataTypes');
 
+const missionControlUrl = 'http://localhost:3300';
+
 var missionTotal = 0;
 var transmitPeriod = 60;
+var codeVerified = false;
 
 function sum(total, num) {
     return total + num;
 }
 
-function getMissionBytes(event) {
+function updateMission(event) {
+  codeVerified = false;
+  launchCodeResponse.innerHTML = '';
   let id = missionIdEntry.value;
   if (settings.has('missions.'+id.toString())) {
     document.getElementById('missionIdError').innerHTML = '';
@@ -29,7 +35,7 @@ function getMissionBytes(event) {
     }
     missionTotal = numBytesPods.reduce(sum);
   } else {  // Mission configuration is not saved locally
-    document.getElementById('missionIdError').innerHTML = 'Mission not saved locally';
+    document.getElementById('missionIdError').innerHTML = 'Mission details not saved locally';
   }
   updateEstimatedCost();
 }
@@ -56,10 +62,42 @@ function updateEstimatedCost() {
   costIndicator.innerHTML = '$ ' + cost.toFixed(2)
 }
 
+function verifyLaunchCode() {
+  let id = missionIdEntry.value;
+  request.post(missionControlUrl + '/verifyLaunchCode/' + id,
+    {form: {launchCode: launchCodeEntry.value}},
+    function (err, res, body) {
+      if (!err) {
+        console.log('Response: ' + res.statusCode);
+        console.log(body);
+        if (body == 'VERIFIED') {
+          codeVerified = true;
+          launchCodeResponse.style.color = "green";
+          launchCodeResponse.innerHTML = '<i class="material-icons" role="presentation">verified_user</i>'
+        } else {
+          codeVerified = false;
+          launchCodeResponse.style.color = "red";
+          launchCodeResponse.innerHTML = '<i class="material-icons" role="presentation">cancel</i>'
+        }
+      } else {
+        codeVerified = false;
+        console.log('Error: ' + err);
+        launchCodeResponse.style.color = "red";
+        launchCodeResponse.innerHTML = '<i class="material-icons" role="presentation">error</i>'
+      }
+    }
+  );
+}
+
 
 
 const missionIdEntry = document.getElementById('missionIDlaunch');
-missionIdEntry.addEventListener('change', getMissionBytes.bind(null, event), false);
+missionIdEntry.addEventListener('change', updateMission.bind(null, event), false);
 
 const periodSelect = document.getElementById('periodSelect');
 periodSelect.addEventListener('change', updateTransmitPeriod.bind(null, event), false);
+
+const launchCodeEntry = document.getElementById('launchCode');
+launchCodeEntry.addEventListener('change', verifyLaunchCode.bind(null, event), false);
+
+const launchCodeResponse = document.getElementById('launchCodeResponse');
