@@ -154,6 +154,7 @@ function verifyActiveStatus() {
         document.getElementById('modeCheckSection').classList.remove('is-shown');
         console.log(err);
       }
+      document.getElementById('statusSpinner').classList.remove('is-active');
     }
   );
 }
@@ -210,7 +211,6 @@ async function setManifest() {
     {form: {launchCode: launchCodeEntry.value, manifest: JSON.stringify(manifest)}},
     function (err, res, body) {
       if (!err) {
-        console.log(body);
         verifyManifest();
       } else {
         console.log('Error: ' + err);
@@ -219,16 +219,50 @@ async function setManifest() {
   );
 }
 
+async function setStatusActive() {
+  let id = missionIdEntry.value;
+  await request.put(missionControlUrl + '/setStatusActive/' + id,
+    {form: {launchCode: launchCodeEntry.value}},
+    function (err, res, body) {
+      if (!err) {
+        console.log(body);
+      } else {
+        console.log('Error: ' + err);
+      }
+    }
+  );
+  document.getElementById('statusSpinner').classList.add('is-active');
+  setTimeout(function() {verifyActiveStatus()},2000);
+}
+
+async function setStatusPlanned() {
+  let id = missionIdEntry.value;
+  await request.put(missionControlUrl + '/setStatusPlanned/' + id,
+    {form: {launchCode: launchCodeEntry.value}},
+    function (err, res, body) {
+      if (!err) {
+        console.log(body);
+      } else {
+        console.log('Error: ' + err);
+      }
+    }
+  );
+  document.getElementById('statusSpinner').classList.add('is-active');
+  setTimeout(function() {verifyActiveStatus()},2000);
+}
+
+
+
 function changeMissionStatus(event) {
   if (event.target.checked) {
-    statusSwitchSetting.classList.add('is-checked');
+    setStatusActive();
   } else {
-    statusSwitchSetting.classList.remove('is-checked');
+    setStatusPlanned();
   }
 }
 
 
-const missionIdEntry = document.getElementById('missionIDlaunch');
+const missionIdEntry = document.getElementById('missionIDLaunch');
 missionIdEntry.addEventListener('change', updateMission.bind(null, event), false);
 
 const periodSelect = document.getElementById('periodSelect');
