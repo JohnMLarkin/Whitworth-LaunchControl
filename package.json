@@ -25,9 +25,11 @@
     "electron-settings": "^3.2.0"
   },
   "dependencies": {
+    "async": "^2.6.1",
     "data-table": "^2.0.0",
     "getmdl-select": "^2.0.1",
     "request": "^2.87.0",
-    "serialport": "^6.2.2"
+    "serialport": "^6.2.2",
+    "underscore": "^1.9.1"
   }
 }

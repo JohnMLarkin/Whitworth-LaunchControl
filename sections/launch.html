@@ -27,9 +27,9 @@
           </div>
         </div>
       </div>
-      <div class="mdl-cell mdl-cell--6-col mdl-shadow--2dp" id="sbdPeriod-subsection">
+      <div class="mdl-cell mdl-cell--8-col mdl-shadow--2dp">
         <div class="mdl-grid mdl-grid--no-spacing">
-          <div class="mdl-cell mdl-cell--6-col" style="text-align: center; align-content: center;">
+          <div class="mdl-cell mdl-cell--8-col" style="text-align: center; align-content: center;">
             <h6>Time between satellite message broadcasts</h6>
             <div class="mdl-textfield mdl-js-textfield getmdl-select" style="padding-left: 10px;">
                 <input type="text" value="" class="mdl-textfield__input" id="periodSelect" readonly>
@@ -46,15 +46,69 @@
                 </ul>
             </div>
           </div>
-          <div class="mdl-cell mdl-cell--6-col" style="padding-left: 10px; align-content: center;">
+          <div class="mdl-cell mdl-cell--4-col" style="padding-left: 10px; align-content: center;">
             <h6 style="text-align: center;">Estimated cost of flight</h6>
             <h5 style="text-align: center;" id="estCost">$ &mdash;</h5>
           </div>
         </div>
       </div>
     </div>
-
-
+    <div class="subsection" id="manifestCheckSection">
+      <div class="subsection-wrapper" id="manifestCheckWrapper">
+        <button id="manifestCheck-toggle" class="js-container-target subsection-toggle-button"><span id="manifestVerifyStatus"></span> &nbsp; Manifest synchronized with Mission Control
+        </button>
+        <div class="subsection-box">
+          <div class="mdl-grid mdl-grid--no-spacing">
+            <div class="mdl-cell mdl-cell--4-col">
+              <button class="mdl-button mdl-js-button mdl-button--raised
+                mdl-js-ripple-effect mdl-button--colored" id="pushManifestButton">
+                Push manifest to Mission Control
+              </button>
+            </div>
+            <div class="mdl-cell mdl-cell--4-col mdl-shadow--2dp" style="padding-left: 10px; padding-right: 10px;">
+              <h6>Local manifest</h6>
+              <span id="localManifestJSON"></span>
+            </div>
+            <div class="mdl-cell mdl-cell--4-col mdl-shadow--2dp" style="padding-left: 10px; padding-right: 10px;">
+              <h6>Mission Control manifest</h6>
+              <span id="remoteManifestJSON"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="subsection" id="statusCheckSection">
+      <div class="subsection-wrapper" id="statusCheckWrapper">
+        <button id="statusCheck-toggle" class="js-container-target subsection-toggle-button"><span id="missionStatusActive"></span> &nbsp; Mission status active
+        </button>
+        <div class="subsection-box">
+          <div class="mdl-grid mdl-grid--no-spacing">
+            <div class="mdl-cell mdl-cell--12-col">
+              <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="statusSwitch" id="statusSwitchSetting">
+                <input type="checkbox" id="statusSwitch" class="mdl-switch__input">
+                <span class="mdl-switch__label">Mission active</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="subsection" id="modeCheckSection">
+      <div class="subsection-wrapper" id="modeCheckWrapper">
+        <button id="modeCheck-toggle" class="js-container-target subsection-toggle-button"><span id="flightModeOn"></span> &nbsp; Command Module in flight mode
+        </button>
+        <div class="subsection-box">
+          <div class="mdl-grid mdl-grid--no-spacing">
+            <div class="mdl-cell mdl-cell--12-col">
+              <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="modeSwitch" id="modeSwitchSetting">
+                <input type="checkbox" id="modeSwitch" class="mdl-switch__input">
+                <span class="mdl-switch__label">Flight mode</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <script type="text/javascript">
       require('./renderer-process/launch');
     </script>
