@@ -21,6 +21,8 @@ var waitingForGPSData = false;
 var nextGPSelement = 0;
 var waitingForCmdSensors = false;
 var nextCmdSensorElement = 0;
+var waitingForFlightMode = false;
+var flightMode;
 
 // Autodetect mbed connection
 function autoDetectPort() {
@@ -108,6 +110,10 @@ function receiveSerialData(data) {
       default:
     }
     nextCmdSensorElement++;
+  } else if (waitingForFlightMode) {
+    flightMode = Number(data.substring(data.indexOf("=")+1));
+    waitingForFlightMode = false;
+    busy = false;
   }
   while (logLines.length>maxLines) logLines.shift();
   logLines.push(data);
@@ -187,6 +193,45 @@ function processCmdQueue() {
         logLines.push('> GPSDATA');
         waitingForGPSData = true;
         break;
+      case "FLIGHT_MODE ON":
+        myPort.write("FLIGHT_MODE ON\r\n");
+        logLines.push('> FLIGHT_MODE ON');
+        busy = false;
+        break;
+      case "FLIGHT_MODE OFF":
+        myPort.write("FLIGHT_MODE OFF\r\n");
+        logLines.push('> FLIGHT_MODE OFF');
+        busy = false;
+        break;
+      case "FLIGHT_MODE?":
+        myPort.write("FLIGHT_MODE?\r\n");
+        logLines.push('> FLIGHT_MODE?');
+        waitingForFlightMode = true;
+        break;
+      default:
+        if (command.length>6) {
+          subcmd = command.substring(0,6);
+          switch (subcmd) {
+            case 'TRANSP':
+              let p = Number(command.substring(command.indexOf("=")+1));
+              myPort.write(`TRANSPERIOD=${p.toFixed(0)}\r\n`);
+              logLines.push(`> TRANSPERIOD=${p.toFixed(0)}`);
+              busy = false;
+              break;
+          }
+        }
+        if (command.length>11) {
+          subcmd = command.substring(0,11);
+          if (subcmd == 'TRANSPERIOD') {
+
+          } else {
+            logLines.push(`> Unrecognized command: ${command}`);
+            busy = false;
+          }
+        } else {
+          logLines.push(`> Unrecognized command: ${command}`);
+          busy = false;
+        }
     }
     while (logLines.length>maxLines) logLines.shift();
     document.getElementById('modemConsole').innerHTML =  logLines.join("<br>");

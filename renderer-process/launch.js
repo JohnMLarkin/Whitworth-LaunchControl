@@ -137,8 +137,10 @@ function verifyActiveStatus() {
           statusSwitchSetting.classList.add('is-checked');
           document.getElementById('modeCheckSection').classList.add('is-shown');
           document.getElementById('modeCheckWrapper').classList.add('is-open');
-          flightModeOn.style.color = "red";
-          flightModeOn.innerHTML = '<i class="material-icons" role="presentation" style="vertical-align: middle">cancel</i>';
+          flightMode = -1;
+          document.getElementById('modeSpinner').classList.add('is-active');
+          cmdQueue.push("FLIGHT_MODE?");
+          setTimeout(function() {verifyFlightMode()},2000);
         } else {
           missionStatusActive.style.color = "red";
           missionStatusActive.innerHTML = '<i class="material-icons" role="presentation" style="vertical-align: middle">cancel</i>';
@@ -157,6 +159,42 @@ function verifyActiveStatus() {
       document.getElementById('statusSpinner').classList.remove('is-active');
     }
   );
+}
+
+function verifyFlightMode() {
+  switch (flightMode) {
+    case 0:
+      flightModeOn.style.color = "red";
+      flightModeOn.innerHTML = '<i class="material-icons" role="presentation" style="vertical-align: middle">cancel</i>';
+      modeSwitchSetting.classList.remove('is-checked');
+      document.getElementById('modeCheckWrapper').classList.add('is-open');
+      break;
+    case 1:
+      flightModeOn.style.color = "green";
+      flightModeOn.innerHTML = '<i class="material-icons" role="presentation" style="vertical-align: middle">check_circle</i>';
+      modeSwitchSetting.classList.add('is-checked');
+      document.getElementById('modeCheckWrapper').classList.remove('is-open');
+      break;
+    case 2:
+      flightModeOn.style.color = "green";
+      flightModeOn.innerHTML = '<i class="material-icons" role="presentation" style="vertical-align: middle">lock</i>';
+      modeSwitchSetting.classList.add('is-checked');
+      document.getElementById('modeCheckWrapper').classList.remove('is-open');
+      modeSwitch.disable = true;
+      break;
+    case 3:
+      flightModeOn.style.color = "green";
+      flightModeOn.innerHTML = '<i class="material-icons" role="presentation" style="vertical-align: middle">lock</i>';
+      modeSwitchSetting.classList.add('is-checked');
+      document.getElementById('modeCheckWrapper').classList.remove('is-open');
+      modeSwitch.disable = true;
+      break;
+    default:
+      flightModeOn.style.color = "red";
+      flightModeOn.innerHTML = '<i class="material-icons" role="presentation" style="vertical-align: middle">device_unknown</i>';
+      document.getElementById('modeCheckWrapper').classList.add('is-open');
+  }
+  document.getElementById('modeSpinner').classList.remove('is-active');
 }
 
 async function getManifest() {
@@ -251,8 +289,6 @@ async function setStatusPlanned() {
   setTimeout(function() {verifyActiveStatus()},2000);
 }
 
-
-
 function changeMissionStatus(event) {
   if (event.target.checked) {
     setStatusActive();
@@ -261,6 +297,20 @@ function changeMissionStatus(event) {
   }
 }
 
+function handleFlightModeSwitch(event) {
+  if (event.target.checked) {
+    let id = missionIdEntry.value;
+    cmdQueue.push(`MISSIONID=${id}`);
+    cmdQueue.push(`TRANSPERIOD=${transmitPeriod}`);
+    cmdQueue.push("FLIGHT_MODE ON");
+  } else {
+    cmdQueue.push("FLIGHT_MODE OFF");
+  }
+  flightMode = -1;
+  document.getElementById('modeSpinner').classList.add('is-active');
+  cmdQueue.push("FLIGHT_MODE?");
+  setTimeout(function() {verifyFlightMode()},4000);
+}
 
 const missionIdEntry = document.getElementById('missionIDLaunch');
 missionIdEntry.addEventListener('change', updateMission.bind(null, event), false);
@@ -285,4 +335,4 @@ statusSwitch.addEventListener('click', changeMissionStatus, false);
 
 const modeSwitchSetting = document.getElementById('modeSwitchSetting');
 const modeSwitch = document.getElementById('modeSwitch');
-//modeSwitch.addEventListener('click', changeFlightMode, false);
+modeSwitch.addEventListener('click', handleFlightModeSwitch, false);
