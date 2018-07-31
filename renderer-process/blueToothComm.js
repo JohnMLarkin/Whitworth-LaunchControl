@@ -31,6 +31,7 @@ var waitingForCmdSensors = false;
 var nextCmdSensorElement = 0;
 var waitingForFlightMode = false;
 var flightMode;
+var waitingForHandshake = false;
 
 // Search for Bluetooth port
 function autoDetectPort() {
@@ -50,6 +51,10 @@ function autoDetectPort() {
           while (logLines.length>maxLines) logLines.shift();
           logLines.push('Bluetooth port at ' + portName);
           document.getElementById('modemConsole').innerHTML =  logLines.join("<br>");
+          myPort = new serialport(portName, {
+            baudRate: 115200,
+            autoOpen: false
+          });
           detectConnectTicker = setInterval(autoConnectPort, 1000);
         }
       }
@@ -62,9 +67,7 @@ detectPortTicker = setInterval(autoDetectPort, 1000);
 
 // Try to make serial port connection
 function autoConnectPort() {
-  myPort = new serialport(portName, {
-    baudRate: 115200,
-  }, (err) => {
+  myPort.open( (err) => {
     if (!err) {
       clearInterval(detectConnectTicker);
       portConnected = true;
@@ -78,15 +81,11 @@ function autoConnectPort() {
       document.getElementById('switch-XBee').disabled = false;
       document.getElementById('button-GPS_update').disabled = false;
       processCmdQueueTicker = setInterval(function() {
-        if (portConnected) {
-          processCmdQueue();
-        } else {
-          cmdQueue = [];
-        }
+        processCmdQueue();
       }, 500);
-      updateSensorsTicker = setInterval(function() {
-        cmdQueue.push("CMDSENSORS");
-      }, 15000);
+      setTimeout(function() {
+        cmdQueue.push("HELLO");
+      }, 1000);
     }
   });
 }
@@ -154,6 +153,15 @@ function receiveSerialData(data) {
     flightMode = Number(data.substring(data.indexOf("=")+1));
     waitingForFlightMode = false;
     busy = false;
+  } else if (waitingForHandshake) {
+    console.log(data);
+    if (data=='COMMAND MODULE READY') {
+      updateSensorsTicker = setInterval(function() {
+        cmdQueue.push("CMDSENSORS");
+      }, 15000);
+      waitingForHandshake = false;
+      busy = false;
+    }
   }
   while (logLines.length>maxLines) logLines.shift();
   logLines.push(data);
@@ -161,7 +169,7 @@ function receiveSerialData(data) {
 }
 
 function processCmdQueue() {
-  if (portConnected && !busy && (cmdQueue.length>0)) {
+  if (myPort.isOpen && !busy && (cmdQueue.length>0)) {
     command = cmdQueue.shift();
     busy = true;
     switch (command) {
@@ -231,6 +239,13 @@ function processCmdQueue() {
         myPort.write("FLIGHT_MODE?\r\n");
         logLines.push('> FLIGHT_MODE?');
         waitingForFlightMode = true;
+        break;
+      case "HELLO":
+        waitingForHandshake = true;
+        logLines.push('Waiting for response from Command Module...');
+        myPort.write("HELLO\r\n", 'ascii', (err) => {
+          if (err) console.log(err);
+        });
         break;
       default:
         if (command.includes("TRANSPERIOD")) {

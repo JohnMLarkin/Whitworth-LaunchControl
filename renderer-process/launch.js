@@ -18,6 +18,10 @@ document.getElementById('manifestCheckSection').classList.remove('is-shown');
 document.getElementById('statusCheckSection').classList.remove('is-shown');
 document.getElementById('modeCheckSection').classList.remove('is-shown');
 
+dataTypeDict = {};
+for (let i = 0; i < dataTypes.length; i++) {
+  dataTypeDict[dataTypes[i][0]] = i;
+}
 
 function sum(total, num) {
     return total + num;
@@ -120,7 +124,8 @@ async function verifyManifest() {
     manifestVerifyStatus.innerHTML = '<i class="material-icons" role="presentation" style="vertical-align: middle">check_circle</i>';
     document.getElementById('manifestCheckWrapper').classList.remove('is-open');
     document.getElementById('statusCheckSection').classList.add('is-shown');
-    document.getElementById('pushManifestButton').disabled = true;
+    pushManifestButton.disabled = true;
+    pullManifestButton.disabled = true;
     verifyActiveStatus();
   } else {
     manifestVerifyStatus.style.color = "red";
@@ -128,6 +133,7 @@ async function verifyManifest() {
     document.getElementById('manifestCheckWrapper').classList.add('is-open');
     document.getElementById('statusCheckSection').classList.remove('is-shown');
     pushManifestButton.disabled = false;
+    pullManifestButton.disabled = false;
     document.getElementById('modeCheckSection').classList.remove('is-shown');
   }
 }
@@ -223,9 +229,25 @@ async function getManifest() {
 }
 
 async function importManifest() {
-  return new Promise( (resolve, reject) => {
-    let manifest = await getManifest();
-  });
+  let manifest = await getManifest();
+  let id = missionIdEntry.value;
+  let podTable = [];
+  let numPods = manifest.length;
+  for (let i = 0; i < numPods; i++) {
+    settings.set('missions.' + id + '.pod' + (i+1).toString() + 'description', manifest[i].podDescription);
+    podTable[i] = [];
+    for (let j = 0; j < manifest[i].dataTypes.length; j++) {
+      podTable[i][j] = [];
+      podTable[i][j][0] = j + 1;
+      podTable[i][j][1] = manifest[i].dataDescriptions[j];
+      console.log(manifest[i].dataTypes[j]);
+      podTable[i][j][2] = String(dataTypeDict[manifest[i].dataTypes[j]]);
+    }
+  }
+  console.log('Generated podTable from remote:');
+  console.log(podTable);
+  settings.set('missions.' + id + '.podTable', podTable);
+  verifyManifest();
 }
 
 async function makeManifest() {
@@ -235,6 +257,8 @@ async function makeManifest() {
     let manifest = [];
     if (settings.has('missions.' + id)) {  // Load saved mission if it exists
       podTable = settings.get('missions.'+ id +'.podTable');
+      console.log('Local podTable:');
+      console.log(podTable);
       numPods = podTable.length;
       for (let i = 0; i < numPods; i++) {
         manifest[i] = {};
@@ -334,6 +358,8 @@ const launchCodeResponse = document.getElementById('launchCodeResponse');
 
 const pushManifestButton = document.getElementById('pushManifestButton');
 pushManifestButton.addEventListener('click', setManifest.bind(null, event), false);
+const pullManifestButton = document.getElementById('pullManifestButton');
+pullManifestButton.addEventListener('click', importManifest.bind(null, event), false);
 const manifestVerifyStatus = document.getElementById('manifestVerifyStatus');
 const localManifestJSON = document.getElementById('localManifestJSON');
 const remoteManifestJSON = document.getElementById('remoteManifestJSON');
