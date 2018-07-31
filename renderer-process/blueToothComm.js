@@ -11,6 +11,11 @@ var portConnected = false;
 var myPort = new serialport('COM1', {autoOpen: false}); // just a dummy
 var parser;
 
+var detectPortTicker;
+var detectConnectTicker;
+var processCmdQueueTicker;
+var updateSensorsTicker;
+
 var batteryVoltage = 0;
 var externalTemperature = -50;
 var internalTemperature = -50;
@@ -27,72 +32,83 @@ var nextCmdSensorElement = 0;
 var waitingForFlightMode = false;
 var flightMode;
 
-// Autodetect mbed connection
+// Search for Bluetooth port
 function autoDetectPort() {
   let btCount = 0;
   serialport.list(function (err, ports) {
+    if (err) console.log(err);
+    if (ports) console.log(ports);
     ports.forEach(function(port) {
       //console.log("For " + port.comName + " search is " + port.pnpId.search("BTHENUM"));
       if (port.pnpId.search("BTHENUM")==0) {
         btCount++;
         if ((btCount==2) && !portFound) {
+          clearInterval(detectPortTicker);
           portName = port.comName;
           portFound = true;
-
-          //  BROKEN BROKEN BROKEN
-          //  BROKEN BROKEN BROKEN
-          //  BROKEN BROKEN BROKEN
-          //  BROKEN BROKEN BROKEN
-
-          myPort = new serialport(port.comName, {
-            // autoOpen: false,
-            baudRate: 115200,
-          }, (err) => {
-            if (!err) {
-              portConnected = true;
-              while (logLines.length>maxLines) logLines.shift();
-              logLines.push('Port open with data rate ' + myPort.baudRate + ' baud');
-            } else {
-              portConnected = false;
-            }
-          });
-
-          portFound = true;
-          console.log(myPort);
+          portConnected = false;
+          while (logLines.length>maxLines) logLines.shift();
+          logLines.push('Bluetooth port at ' + portName);
+          document.getElementById('modemConsole').innerHTML =  logLines.join("<br>");
+          detectConnectTicker = setInterval(autoConnectPort, 1000);
         }
       }
-      /*
-      if ((port.manufacturer == 'mbed') &&  !portFound) {
-        myPort = new serialport(port.comName, {
-          autoOpen: false,
-          baudRate: 115200,
-          parser: serialport.parsers.readline("\r\n")
-        });
-        portFound = true;
-      }
-      */
     });
-    if (portConnected) {
-      //myPort.on('open', showPortOpen);
+  });
+}
+
+// On page load start autoDetectPort and continue until Bluetooth found
+detectPortTicker = setInterval(autoDetectPort, 1000);
+
+// Try to make serial port connection
+function autoConnectPort() {
+  myPort = new serialport(portName, {
+    baudRate: 115200,
+  }, (err) => {
+    if (!err) {
+      clearInterval(detectConnectTicker);
+      portConnected = true;
+      while (logLines.length>maxLines) logLines.shift();
+      logLines.push('Bluetooth connected with data rate ' + myPort.baudRate + ' baud');
       parser = myPort.pipe(new Readline({delimiter:'\r\n'}));
       parser.on('data', receiveSerialData);
       myPort.on('close', showPortClose);
       myPort.on('error', showError);
-      //myPort.open();
+      document.getElementById('modemConsole').innerHTML =  logLines.join("<br>");
+      document.getElementById('switch-XBee').disabled = false;
+      document.getElementById('button-GPS_update').disabled = false;
+      processCmdQueueTicker = setInterval(function() {
+        if (portConnected) {
+          processCmdQueue();
+        } else {
+          cmdQueue = [];
+        }
+      }, 500);
+      updateSensorsTicker = setInterval(function() {
+        cmdQueue.push("CMDSENSORS");
+      }, 15000);
     }
   });
 }
 
-
-
-function showPortOpen() {
-  if (err) console.log('Big trouble!');
+function showPortClose() {
+  clearInterval(processCmdQueueTicker);
+  clearInterval(updateSensorsTicker);
   while (logLines.length>maxLines) logLines.shift();
-  logLines.push('Port open with data rate ' + myPort.baudRate + ' baud');
+  logLines.push('Port closed.');
   document.getElementById('modemConsole').innerHTML =  logLines.join("<br>");
+  portFound = false;
+  portConnected = false;
+  detectPortTicker = setInterval(autoDetectPort, 1000);
+}
+
+function showError(error) {
+  while (logLines.length>maxLines) logLines.shift();
+  logLines.push('Serial port error: ' + error);
+  console.log(error);
   document.getElementById('switch-XBee').disabled = false;
-  document.getElementById('button-GPS_update').disabled = false;
-  portConnected = true;
+  document.getElementById('button-GPS_update').disabled = true;
+  document.getElementById('modemConsole').innerHTML =  logLines.join("<br>");
 }
 
 function receiveSerialData(data) {
@@ -141,24 +157,6 @@ function receiveSerialData(data) {
   }
   while (logLines.length>maxLines) logLines.shift();
   logLines.push(data);
-  document.getElementById('modemConsole').innerHTML =  logLines.join("<br>");
-}
-
-function showPortClose() {
-  while (logLines.length>maxLines) logLines.shift();
-  logLines.push('Port closed.');
-  document.getElementById('modemConsole').innerHTML =  logLines.join("<br>");
-  portFound = false;
-  portConnected = false;
-}
-
-function showError(error) {
-  while (logLines.length>maxLines) logLines.shift();
-  logLines.push('Serial port error: ' + error);
-  console.log(error);
-  portFound = false;
-  document.getElementById('switch-XBee').disabled = false;
-  document.getElementById('button-GPS_update').disabled = true;
   document.getElementById('modemConsole').innerHTML =  logLines.join("<br>");
 }
 
@@ -254,29 +252,3 @@ function processCmdQueue() {
     document.getElementById('modemConsole').innerHTML =  logLines.join("<br>");
   }
 }
-
-setInterval(function() {
-  if (!portFound) {
-    autoDetectPort();
-  }
-}, 5000);
-
-setInterval(function() {
-  if ((portFound) && (!portConnected)) {
-    autoConnectPort();
-  }
-}, 1000);
-
-setInterval(function() {
-  if (portConnected) {
-    processCmdQueue();
-  } else {
-    cmdQueue = [];
-  }
-}, 500);
-
-// setInterval(function() {
-//   if (portConnected) {
-//     cmdQueue.push("CMDSENSORS");
-//   }
-// }, 10000);
