@@ -7,10 +7,17 @@ const dataTypes = require('./dataTypes');
 
 const missionControlUrl = 'http://localhost:3300';
 
+
+// Initial values and states
 var missionTotal = 0;
 var transmitPeriod = 60;
 var codeVerified = false;
 var manifestVerified = false;
+
+document.getElementById('manifestCheckSection').classList.remove('is-shown');
+document.getElementById('statusCheckSection').classList.remove('is-shown');
+document.getElementById('modeCheckSection').classList.remove('is-shown');
+
 
 function sum(total, num) {
     return total + num;
@@ -215,6 +222,12 @@ async function getManifest() {
   });
 }
 
+async function importManifest() {
+  return new Promise( (resolve, reject) => {
+    let manifest = await getManifest();
+  });
+}
+
 async function makeManifest() {
   return new Promise( (resolve, reject) => {
     let id = missionIdEntry.value.toString();
@@ -240,10 +253,6 @@ async function makeManifest() {
 
 async function setManifest() {
   let manifest = await makeManifest();
-  console.log('Local to push');
-  console.log(manifest);
-  console.log('stringified');
-  console.log(JSON.stringify(manifest));
   let id = missionIdEntry.value;
   request.put(missionControlUrl + '/setManifest/' + id,
     {form: {launchCode: launchCodeEntry.value, manifest: JSON.stringify(manifest)}},

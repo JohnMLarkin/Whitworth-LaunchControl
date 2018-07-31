@@ -2,11 +2,14 @@
 // be executed in the renderer process for that window.
 // All of the Node.js APIs are available in this process.
 
-const serialport = require('serialport')
+const serialport = require('serialport');
+const Readline = require('@serialport/parser-readline');
 
-var btCount = 0;
 var portFound = false;
+var portName;
+var portConnected = false;
 var myPort = new serialport('COM1', {autoOpen: false}); // just a dummy
+var parser;
 
 var batteryVoltage = 0;
 var externalTemperature = -50;
@@ -26,18 +29,36 @@ var flightMode;
 
 // Autodetect mbed connection
 function autoDetectPort() {
+  let btCount = 0;
   serialport.list(function (err, ports) {
     ports.forEach(function(port) {
       //console.log("For " + port.comName + " search is " + port.pnpId.search("BTHENUM"));
       if (port.pnpId.search("BTHENUM")==0) {
         btCount++;
         if ((btCount==2) && !portFound) {
-          myPort = new serialport(port.comName, {
-            autoOpen: false,
-            baudRate: 115200,
-            parser: serialport.parsers.readline("\r\n")
-          });
+          portName = port.comName;
           portFound = true;
+
+          //  BROKEN BROKEN BROKEN
+          //  BROKEN BROKEN BROKEN
+          //  BROKEN BROKEN BROKEN
+          //  BROKEN BROKEN BROKEN
+
+          myPort = new serialport(port.comName, {
+            // autoOpen: false,
+            baudRate: 115200,
+          }, (err) => {
+            if (!err) {
+              portConnected = true;
+              while (logLines.length>maxLines) logLines.shift();
+              logLines.push('Port open with data rate ' + myPort.baudRate + ' baud');
+            } else {
+              portConnected = false;
+            }
+          });
+
+          portFound = true;
+          console.log(myPort);
         }
       }
       /*
@@ -51,12 +72,13 @@ function autoDetectPort() {
       }
       */
     });
-    if (portFound) {
-      myPort.on('open', showPortOpen);
-      myPort.on('data', receiveSerialData);
+    if (portConnected) {
+      //myPort.on('open', showPortOpen);
+      parser = myPort.pipe(new Readline({delimiter:'\r\n'}));
+      parser.on('data', receiveSerialData);
       myPort.on('close', showPortClose);
       myPort.on('error', showError);
-      myPort.open();
+      //myPort.open();
     }
   });
 }
@@ -64,11 +86,13 @@ function autoDetectPort() {
 
 
 function showPortOpen() {
+  if (err) console.log('Big trouble!');
   while (logLines.length>maxLines) logLines.shift();
-  logLines.push('Port open with data rate ' + myPort.options.baudRate + ' baud');
+  logLines.push('Port open with data rate ' + myPort.baudRate + ' baud');
   document.getElementById('modemConsole').innerHTML =  logLines.join("<br>");
   document.getElementById('switch-XBee').disabled = false;
   document.getElementById('button-GPS_update').disabled = false;
+  portConnected = true;
 }
 
 function receiveSerialData(data) {
@@ -125,11 +149,13 @@ function showPortClose() {
   logLines.push('Port closed.');
   document.getElementById('modemConsole').innerHTML =  logLines.join("<br>");
   portFound = false;
+  portConnected = false;
 }
 
 function showError(error) {
   while (logLines.length>maxLines) logLines.shift();
   logLines.push('Serial port error: ' + error);
+  console.log(error);
   portFound = false;
   document.getElementById('switch-XBee').disabled = false;
   document.getElementById('button-GPS_update').disabled = true;
@@ -137,7 +163,7 @@ function showError(error) {
 }
 
 function processCmdQueue() {
-  if (portFound && !busy && (cmdQueue.length>0)) {
+  if (portConnected && !busy && (cmdQueue.length>0)) {
     command = cmdQueue.shift();
     busy = true;
     switch (command) {
@@ -209,25 +235,16 @@ function processCmdQueue() {
         waitingForFlightMode = true;
         break;
       default:
-        if (command.length>6) {
-          subcmd = command.substring(0,6);
-          switch (subcmd) {
-            case 'TRANSP':
-              let p = Number(command.substring(command.indexOf("=")+1));
-              myPort.write(`TRANSPERIOD=${p.toFixed(0)}\r\n`);
-              logLines.push(`> TRANSPERIOD=${p.toFixed(0)}`);
-              busy = false;
-              break;
-          }
-        }
-        if (command.length>11) {
-          subcmd = command.substring(0,11);
-          if (subcmd == 'TRANSPERIOD') {
-
-          } else {
-            logLines.push(`> Unrecognized command: ${command}`);
-            busy = false;
-          }
+        if (command.includes("TRANSPERIOD")) {
+          let p = Number(command.substring(command.indexOf("=")+1));
+          myPort.write(`TRANSPERIOD=${p.toFixed(0)}\r\n`);
+          logLines.push(`> TRANSPERIOD=${p.toFixed(0)}`);
+          busy = false;
+        } else if (command.includes("MISSIONID")) {
+          let p = Number(command.substring(command.indexOf("=")+1));
+          myPort.write(`MISSIONID=${p.toFixed(0)}\r\n`);
+          logLines.push(`> MISSIONID=${p.toFixed(0)}`);
+          busy = false;
         } else {
           logLines.push(`> Unrecognized command: ${command}`);
           busy = false;
@@ -239,15 +256,27 @@ function processCmdQueue() {
 }
 
 setInterval(function() {
-  if (portFound) {
-    cmdQueue.push("CMDSENSORS");
-  }
-}, 10000);
-
-setInterval(processCmdQueue, 500);
-
-setInterval(function() {
   if (!portFound) {
     autoDetectPort();
   }
 }, 5000);
+
+setInterval(function() {
+  if ((portFound) && (!portConnected)) {
+    autoConnectPort();
+  }
+}, 1000);
+
+setInterval(function() {
+  if (portConnected) {
+    processCmdQueue();
+  } else {
+    cmdQueue = [];
+  }
+}, 500);
+
+// setInterval(function() {
+//   if (portConnected) {
+//     cmdQueue.push("CMDSENSORS");
+//   }
+// }, 10000);
