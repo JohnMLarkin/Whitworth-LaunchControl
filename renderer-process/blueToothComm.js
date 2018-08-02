@@ -32,6 +32,7 @@ var nextCmdSensorElement = 0;
 var waitingForFlightMode = false;
 var flightMode;
 var waitingForHandshake = false;
+var waitingForFlightModeOk = false;
 
 // Search for Bluetooth port
 function autoDetectPort() {
@@ -111,6 +112,7 @@ function showError(error) {
 }
 
 function receiveSerialData(data) {
+  console.log(data);
   if (waitingForGPSData) {
     switch (nextGPSelement) {
       case 1:
@@ -154,14 +156,18 @@ function receiveSerialData(data) {
     waitingForFlightMode = false;
     busy = false;
   } else if (waitingForHandshake) {
-    console.log(data);
     if (data=='COMMAND MODULE READY') {
       updateSensorsTicker = setInterval(function() {
         cmdQueue.push("CMDSENSORS");
-      }, 15000);
+      }, 120000);
       waitingForHandshake = false;
       busy = false;
     }
+  } else if (waitingForFlightModeOk) {
+    if (data=="OK") cmdQueue.push("FLIGHT_MODE?");
+    waitingForFlightMode = true;
+    waitingForFlightModeOk = false;
+    busy = false;
   }
   while (logLines.length>maxLines) logLines.shift();
   logLines.push(data);
@@ -226,14 +232,17 @@ function processCmdQueue() {
         waitingForGPSData = true;
         break;
       case "FLIGHT_MODE ON":
+        clearInterval(updateSensorsTicker);
         myPort.write("FLIGHT_MODE ON\r\n");
         logLines.push('> FLIGHT_MODE ON');
-        busy = false;
+        busy = true;
+        waitingForFlightModeOk = true;
         break;
       case "FLIGHT_MODE OFF":
         myPort.write("FLIGHT_MODE OFF\r\n");
         logLines.push('> FLIGHT_MODE OFF');
-        busy = false;
+        busy = true;
+        waitingForFlightModeOk = true;
         break;
       case "FLIGHT_MODE?":
         myPort.write("FLIGHT_MODE?\r\n");

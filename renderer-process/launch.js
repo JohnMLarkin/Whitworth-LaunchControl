@@ -13,6 +13,7 @@ var missionTotal = 0;
 var transmitPeriod = 60;
 var codeVerified = false;
 var manifestVerified = false;
+var verifyModeTicker;
 
 document.getElementById('manifestCheckSection').classList.remove('is-shown');
 document.getElementById('statusCheckSection').classList.remove('is-shown');
@@ -175,39 +176,42 @@ function verifyActiveStatus() {
 }
 
 function verifyFlightMode() {
-  switch (flightMode) {
-    case 0:
-      flightModeOn.style.color = "red";
-      flightModeOn.innerHTML = '<i class="material-icons" role="presentation" style="vertical-align: middle">cancel</i>';
-      modeSwitchSetting.classList.remove('is-checked');
-      document.getElementById('modeCheckWrapper').classList.add('is-open');
-      break;
-    case 1:
-      flightModeOn.style.color = "green";
-      flightModeOn.innerHTML = '<i class="material-icons" role="presentation" style="vertical-align: middle">check_circle</i>';
-      modeSwitchSetting.classList.add('is-checked');
-      document.getElementById('modeCheckWrapper').classList.remove('is-open');
-      break;
-    case 2:
-      flightModeOn.style.color = "green";
-      flightModeOn.innerHTML = '<i class="material-icons" role="presentation" style="vertical-align: middle">lock</i>';
-      modeSwitchSetting.classList.add('is-checked');
-      document.getElementById('modeCheckWrapper').classList.remove('is-open');
-      modeSwitch.disable = true;
-      break;
-    case 3:
-      flightModeOn.style.color = "green";
-      flightModeOn.innerHTML = '<i class="material-icons" role="presentation" style="vertical-align: middle">lock</i>';
-      modeSwitchSetting.classList.add('is-checked');
-      document.getElementById('modeCheckWrapper').classList.remove('is-open');
-      modeSwitch.disable = true;
-      break;
-    default:
-      flightModeOn.style.color = "red";
-      flightModeOn.innerHTML = '<i class="material-icons" role="presentation" style="vertical-align: middle">device_unknown</i>';
-      document.getElementById('modeCheckWrapper').classList.add('is-open');
+  if ((!waitingForFlightModeOk)&&(!waitingForFlightMode)) {
+    switch (flightMode) {
+      case 0:
+        flightModeOn.style.color = "red";
+        flightModeOn.innerHTML = '<i class="material-icons" role="presentation" style="vertical-align: middle">cancel</i>';
+        modeSwitchSetting.classList.remove('is-checked');
+        document.getElementById('modeCheckWrapper').classList.add('is-open');
+        break;
+      case 1:
+        flightModeOn.style.color = "green";
+        flightModeOn.innerHTML = '<i class="material-icons" role="presentation" style="vertical-align: middle">check_circle</i>';
+        modeSwitchSetting.classList.add('is-checked');
+        document.getElementById('modeCheckWrapper').classList.remove('is-open');
+        break;
+      case 2:
+        flightModeOn.style.color = "green";
+        flightModeOn.innerHTML = '<i class="material-icons" role="presentation" style="vertical-align: middle">lock</i>';
+        modeSwitchSetting.classList.add('is-checked');
+        document.getElementById('modeCheckWrapper').classList.remove('is-open');
+        modeSwitch.disable = true;
+        break;
+      case 3:
+        flightModeOn.style.color = "green";
+        flightModeOn.innerHTML = '<i class="material-icons" role="presentation" style="vertical-align: middle">lock</i>';
+        modeSwitchSetting.classList.add('is-checked');
+        document.getElementById('modeCheckWrapper').classList.remove('is-open');
+        modeSwitch.disable = true;
+        break;
+      default:
+        flightModeOn.style.color = "red";
+        flightModeOn.innerHTML = '<i class="material-icons" role="presentation" style="vertical-align: middle">device_unknown</i>';
+        document.getElementById('modeCheckWrapper').classList.add('is-open');
+    }
+    document.getElementById('modeSpinner').classList.remove('is-active');
+    clearInterval(verifyModeTicker);
   }
-  document.getElementById('modeSpinner').classList.remove('is-active');
 }
 
 async function getManifest() {
@@ -341,8 +345,7 @@ function handleFlightModeSwitch(event) {
   }
   flightMode = -1;
   document.getElementById('modeSpinner').classList.add('is-active');
-  cmdQueue.push("FLIGHT_MODE?");
-  setTimeout(function() {verifyFlightMode()},4000);
+  verifyModeTicker = setInterval(function() {verifyFlightMode()},2000);
 }
 
 const missionIdEntry = document.getElementById('missionIDLaunch');
