@@ -153,8 +153,9 @@ function verifyActiveStatus() {
           document.getElementById('modeCheckWrapper').classList.add('is-open');
           flightMode = -1;
           document.getElementById('modeSpinner').classList.add('is-active');
+          flightModeChangeProcessing = true;
           cmdQueue.push("FLIGHT_MODE?");
-          setTimeout(function() {verifyFlightMode()},2000);
+          setTimeout(function() {verifyFlightMode()},500);
         } else {
           missionStatusActive.style.color = "red";
           missionStatusActive.innerHTML = '<i class="material-icons" role="presentation" style="vertical-align: middle">cancel</i>';
@@ -176,7 +177,8 @@ function verifyActiveStatus() {
 }
 
 function verifyFlightMode() {
-  if ((!waitingForFlightModeOk)&&(!waitingForFlightMode)) {
+  if (!flightModeChangeProcessing) {
+    clearInterval(verifyModeTicker);
     switch (flightMode) {
       case 0:
         flightModeOn.style.color = "red";
@@ -210,7 +212,6 @@ function verifyFlightMode() {
         document.getElementById('modeCheckWrapper').classList.add('is-open');
     }
     document.getElementById('modeSpinner').classList.remove('is-active');
-    clearInterval(verifyModeTicker);
   }
 }
 
@@ -335,6 +336,7 @@ function changeMissionStatus(event) {
 }
 
 function handleFlightModeSwitch(event) {
+  flightModeChangeProcessing = true;
   if (event.target.checked) {
     let id = missionIdEntry.value;
     cmdQueue.push(`MISSIONID=${id}`);
@@ -345,7 +347,7 @@ function handleFlightModeSwitch(event) {
   }
   flightMode = -1;
   document.getElementById('modeSpinner').classList.add('is-active');
-  verifyModeTicker = setInterval(function() {verifyFlightMode()},2000);
+  verifyModeTicker = setInterval(function() {verifyFlightMode()},500);
 }
 
 const missionIdEntry = document.getElementById('missionIDLaunch');

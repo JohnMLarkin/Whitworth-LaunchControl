@@ -33,6 +33,7 @@ var waitingForFlightMode = false;
 var flightMode;
 var waitingForHandshake = false;
 var waitingForFlightModeOk = false;
+var flightModeChangeProcessing = false;
 
 // Search for Bluetooth port
 function autoDetectPort() {
@@ -80,7 +81,7 @@ function autoConnectPort() {
       myPort.on('error', showError);
       document.getElementById('modemConsole').innerHTML =  logLines.join("<br>");
       document.getElementById('switch-XBee').disabled = false;
-      document.getElementById('button-GPS_update').disabled = false;
+      document.getElementById('button-GPS_update').disabled = true;
       processCmdQueueTicker = setInterval(function() {
         processCmdQueue();
       }, 500);
@@ -154,6 +155,7 @@ function receiveSerialData(data) {
   } else if (waitingForFlightMode) {
     flightMode = Number(data.substring(data.indexOf("=")+1));
     waitingForFlightMode = false;
+    flightModeChangeProcessing = false;
     busy = false;
   } else if (waitingForHandshake) {
     if (data=='COMMAND MODULE READY') {
@@ -168,6 +170,8 @@ function receiveSerialData(data) {
     waitingForFlightMode = true;
     waitingForFlightModeOk = false;
     busy = false;
+  } else {
+    if ((data=="OK") || (data=="ERROR")) busy = false;
   }
   while (logLines.length>maxLines) logLines.shift();
   logLines.push(data);
@@ -259,14 +263,12 @@ function processCmdQueue() {
       default:
         if (command.includes("TRANSPERIOD")) {
           let p = Number(command.substring(command.indexOf("=")+1));
-          myPort.write(`TRANSPERIOD=${p.toFixed(0)}\r\n`);
-          logLines.push(`> TRANSPERIOD=${p.toFixed(0)}`);
-          busy = false;
+          myPort.write(`TRANSPERIOD ${p.toFixed(0)}\r\n`);
+          logLines.push(`> TRANSPERIOD ${p.toFixed(0)}`);
         } else if (command.includes("MISSIONID")) {
           let p = Number(command.substring(command.indexOf("=")+1));
-          myPort.write(`MISSIONID=${p.toFixed(0)}\r\n`);
-          logLines.push(`> MISSIONID=${p.toFixed(0)}`);
-          busy = false;
+          myPort.write(`MISSIONID ${p.toFixed(0)}\r\n`);
+          logLines.push(`> MISSIONID ${p.toFixed(0)}`);
         } else {
           logLines.push(`> Unrecognized command: ${command}`);
           busy = false;
