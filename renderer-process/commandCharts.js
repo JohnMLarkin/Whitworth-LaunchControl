@@ -14,10 +14,10 @@ function drawCommandVoltageGauge() {
   ]);
 
   var options = {
-    max: 12,
+    max: 9,
     minorTicks: 3,
-    greenFrom: 7.0, greenTo: 12,
-    yellowFrom: 6.0, yellowTo: 7.0,
+    greenFrom: 7.4, greenTo: 9,
+    yellowFrom: 6.2, yellowTo: 7.4,
     redFrom: 0.0, redTo: 6.0,
     height: 120, width: 120
   };
