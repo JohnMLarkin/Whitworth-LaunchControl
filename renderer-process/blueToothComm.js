@@ -37,15 +37,13 @@ var flightModeChangeProcessing = false;
 
 // Search for Bluetooth port
 function autoDetectPort() {
-  let btCount = 0;
   serialport.list(function (err, ports) {
     if (err) console.log(err);
     if (ports) console.log(ports);
     ports.forEach(function(port) {
-      //console.log("For " + port.comName + " search is " + port.pnpId.search("BTHENUM"));
-      if (port.pnpId.search("BTHENUM")==0) {
-        btCount++;
-        if ((btCount==2) && !portFound) {
+      // My RN41 has a MAC address of D1:D3 and this appeqrs in the pnpId
+      if ((port.pnpId.search("BTHENUM")==0) && (port.pnpId.includes("D1D3"))) {
+        if (!portFound) {
           clearInterval(detectPortTicker);
           portName = port.comName;
           portFound = true;
