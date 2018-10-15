@@ -5,7 +5,7 @@ const async = require('async');
 
 const dataTypes = require('./dataTypes');
 
-const missionControlUrl = 'http://localhost:3300';
+const missionControlUrl = 'http://missioncontrol.westus2.cloudapp.azure.com';
 
 
 // Initial values and states
