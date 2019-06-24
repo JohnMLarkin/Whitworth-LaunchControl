@@ -12,6 +12,7 @@ function createWindow () {
     width: 1900,
     minWidth: 680,
     height: 1000,
+    webPreferences: {nodeIntegration: true}
   }
 
   mainWindow = new BrowserWindow(windowOptions)
@@ -20,10 +21,15 @@ function createWindow () {
     protocol: 'file:',
     slashes: true
   }))
+
   mainWindow.on('closed', function () {
     mainWindow = null
   })
+
+  mainWindow.webContents.openDevTools()
 }
+
+
 
 app.on('ready', createWindow)
 
