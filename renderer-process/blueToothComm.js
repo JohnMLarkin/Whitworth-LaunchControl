@@ -209,8 +209,11 @@ function processCmdQueue() {
         busy = false;
         break;
       case "PODLINK ON":
-        myPort.write("PODLINK ON\r\n");
-        logLines.push('> PODLINK ON');
+        while (command != "END") {
+          myPort.write(`${command}\r\n`);
+          logLines.push(`> ${command}`);
+          command = cmdQueue.shift();
+        }
         busy = false;
         break;
       case "PODLINK OFF":
@@ -263,10 +266,16 @@ function processCmdQueue() {
           let p = Number(command.substring(command.indexOf("=")+1));
           myPort.write(`TRANSPERIOD ${p.toFixed(0)}\r\n`);
           logLines.push(`> TRANSPERIOD ${p.toFixed(0)}`);
+          busy = false;
         } else if (command.includes("MISSIONID")) {
           let p = Number(command.substring(command.indexOf("=")+1));
           myPort.write(`MISSIONID ${p.toFixed(0)}\r\n`);
           logLines.push(`> MISSIONID ${p.toFixed(0)}`);
+          busy = false;
+        } else if (command.includes("ERROR")) {
+          let p = command.substring(command.indexOf(":")+1);
+          logLines.push(`> ERROR: ${p}`);
+          busy = false;
         } else {
           logLines.push(`> Unrecognized command: ${command}`);
           busy = false;
