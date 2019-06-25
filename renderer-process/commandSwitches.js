@@ -1,3 +1,5 @@
+const settings = require('electron-settings');
+
 function handleGPSswitch(event) {
   if (event.target.checked) {
     cmdQueue.push("GPS ON");
@@ -16,7 +18,17 @@ function handleIridiumSwitch(event) {
 
 function handlePodSwitch(event) {
   if (event.target.checked) {
-    cmdQueue.push("PODLINK ON");
+    var fcID = [];
+    let id = missionIdEntry.value;
+    for (let i = 1; i <= numPods; i++) {
+      descriptionField = document.getElementById("pod"+i.toString()+"_FC_ID");
+      fcID[i-1] = descriptionField.value; 
+    }
+    for (let i = 1; i <= numPods; i++) {
+      if (fcID[i-1].length>0) {
+        cmdQueue.push(`POD ${i} = ${fcID[i-1]} ${numBytesPods[i]}`);
+      }
+    }
   } else {
     cmdQueue.push("PODLINK OFF");
   }

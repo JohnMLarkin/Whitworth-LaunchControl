@@ -41,7 +41,7 @@ function autoDetectPort() {
     if (err) console.log(err);
     if (ports) console.log(ports);
     ports.forEach(function(port) {
-      // My RN41 has a MAC address of D1:D3 and this appeqrs in the pnpId
+      // My RN41 has a MAC address of D1:D3 and this appears in the pnpId
       if ((port.pnpId.search("BTHENUM")==0) && (port.pnpId.includes("D1D3"))) {
         if (!portFound) {
           clearInterval(detectPortTicker);

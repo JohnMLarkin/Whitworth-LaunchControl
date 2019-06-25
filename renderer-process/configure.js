@@ -6,6 +6,7 @@ const dataTypes = require('./dataTypes');
 
 var numBytesPods = [27, 0, 0, 0, 0, 0, 0];
 var podTable = [[],[],[],[],[],[]];
+var emptyPodTable = [[],[],[],[],[],[]];
 const numPods = podTable.length;
 
 function populateDataTypeTable() {
@@ -43,6 +44,11 @@ function setMissionId(event) {
       descriptionField.value = settings.get('missions.'+id.toString()+'.pod'+i.toString()+'description');
     }
 
+    for (i=1; i<=numPods; i++) {
+      descriptionField = document.getElementById("pod"+i.toString()+"_FC_ID");
+      descriptionField.value = settings.get('missions.'+id.toString()+'.pod'+i.toString()+'_fc_id');
+    }
+
     // Need to trigger floating label to "float" when value set by code
     var mdlInputs = document.querySelectorAll('.mdl-js-textfield');
     for (var j = 0, l = mdlInputs.length; j < l; j++) {
@@ -50,11 +56,17 @@ function setMissionId(event) {
     }
     loadPodTable(id);
   } else { // Save mission if it doesn't exist yet
-    settings.set('missions.'+id.toString()+'.description', descriptionField.value)
-    settings.set('missions.'+id.toString()+'.podTable', podTable)
+    settings.set('missions.'+id.toString()+'.description', "")
+    settings.set('missions.'+id.toString()+'.podTable', emptyPodTable)
     for (i=1; i<=numPods; i++) {
       descriptionField = document.getElementById("pod"+i.toString()+"Description");
-      settings.set('missions.'+id.toString()+'.pod'+i.toString()+'description', descriptionField.value);
+      descriptionField.value = "";
+      settings.set('missions.'+id.toString()+'.pod'+i.toString()+'description', "");
+    }
+    for (i=1; i<=numPods; i++) {
+      descriptionField = document.getElementById("pod"+i.toString()+"_FC_ID");
+      descriptionField.value = ""; 
+      settings.set('missions.'+id.toString()+'.pod'+i.toString()+'_fc_id',"");
     }
   }
   updatePodTables();
@@ -164,6 +176,13 @@ function changePodDescription(event, pod) {
   var id = idField.value;
   var descriptionField = document.getElementById("pod"+pod.toString()+"Description");
   settings.set('missions.'+id.toString()+'.pod'+pod.toString()+'description', descriptionField.value);
+}
+
+function changePod_FC_ID(event, pod) {
+  var idField = document.getElementById("missionID");
+  var id = idField.value;
+  var fc_id_field = document.getElementById("pod"+pod.toString()+"_FC_ID");
+  settings.set('missions.'+id.toString()+'.pod'+pod.toString()+'_fc_id', fc_id_field.value);
 }
 
 function changeDataType(event, pod, item) {
@@ -278,6 +297,19 @@ const pod5DescriptionEntry = document.getElementById('pod5Description');
 pod5DescriptionEntry.addEventListener('change', changePodDescription.bind(null, event, 5), false);
 const pod6DescriptionEntry = document.getElementById('pod6Description');
 pod6DescriptionEntry.addEventListener('change', changePodDescription.bind(null, event, 6), false);
+
+const pod1_FC_ID_Entry = document.getElementById('pod1_FC_ID');
+pod1_FC_ID_Entry.addEventListener('change', changePod_FC_ID.bind(null, event, 1), false);
+const pod2_FC_ID_Entry = document.getElementById('pod2_FC_ID');
+pod2_FC_ID_Entry.addEventListener('change', changePod_FC_ID.bind(null, event, 2), false);
+const pod3_FC_ID_Entry = document.getElementById('pod3_FC_ID');
+pod3_FC_ID_Entry.addEventListener('change', changePod_FC_ID.bind(null, event, 3), false);
+const pod4_FC_ID_Entry = document.getElementById('pod4_FC_ID');
+pod4_FC_ID_Entry.addEventListener('change', changePod_FC_ID.bind(null, event, 4), false);
+const pod5_FC_ID_Entry = document.getElementById('pod5_FC_ID');
+pod5_FC_ID_Entry.addEventListener('change', changePod_FC_ID.bind(null, event, 5), false);
+const pod6_FC_ID_Entry = document.getElementById('pod6_FC_ID');
+pod6_FC_ID_Entry.addEventListener('change', changePod_FC_ID.bind(null, event, 6), false);
 
 const addPod1ItemBtn = document.getElementById('addPod1Item');
 addPod1ItemBtn.addEventListener('click', insertItem.bind(null,event, 1), false);
