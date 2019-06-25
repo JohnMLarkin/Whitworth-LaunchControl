@@ -7,7 +7,51 @@
         </h2>
       </div>
     </header>
-    
+    <div id="setupConfigReminder">Please setup mission in the Configure Mission tab to get started</div>
+    <div class="subsection">
+      <div class="subsection-wrapper">
+        <button id="pod1monitor-toggle" class="js-container-target subsection-toggle-button">Pod 1 Monitor
+        </button>
+        <div class="subsection-box">
+          <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored mdl-js-ripple-effect" id="refreshPod1">
+            <i class="material-icons">refresh</i>
+          </button>
+          <div class="mdl-grid mdl-grid--no-spacing">
+            <div class="mdl-cell mdl-cell--6-col">
+              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <p id="p1description">Pod 1 description yet not loaded</p>
+              </div>
+            </div>
+            <div class="mdl-cell mdl-cell--6-col">
+              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <p id="fc1id">Flight Computer ID not yet loaded</p>
+              </div>
+            </div>
+          </div>
+          <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp" id="pod1Table">
+            <thead>
+              <tr>
+                <th class="mdl-data-table__cell--non-numeric">Item</th>
+                <th class="mdl-data-table__cell--non-numeric">Label</th>
+                <th class="mdl-data-table__cell--non-numeric">Type</th>
+                <th>Bytes</th>
+                <th class="mdl-data-table__cell--non-numeric">Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th class="mdl-data-table__cell--non-numeric">Total</th>
+                <th class="mdl-data-table__cell--non-numeric">(data only)</th>
+                <th class="mdl-data-table__cell--non-numeric">&mdash;</th>
+                <th id="pod1Total"></th>
+                <th class="mdl-data-table__cell--non-numeric">
+                </th>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
     <script type="text/javascript">
       require('./renderer-process/monitor')
     </script>
