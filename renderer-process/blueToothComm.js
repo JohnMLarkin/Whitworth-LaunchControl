@@ -34,6 +34,7 @@ var flightMode;
 var waitingForHandshake = false;
 var waitingForFlightModeOk = false;
 var flightModeChangeProcessing = false;
+var waitingForPodData = false;
 
 // Search for Bluetooth port
 function autoDetectPort() {
@@ -168,6 +169,9 @@ function receiveSerialData(data) {
     waitingForFlightMode = true;
     waitingForFlightModeOk = false;
     busy = false;
+  } else if (waitingForPodData) {
+    waitingForPodData = false;
+    //process pod data
   } else {
     if ((data=="OK") || (data=="ERROR")) busy = false;
   }
@@ -219,6 +223,12 @@ function processCmdQueue() {
       case "PODLINK OFF":
         myPort.write("PODLINK OFF\r\n");
         logLines.push('> PODLINK OFF');
+        busy = false;
+        break;
+      case "PODDATA":
+        myPort.write("PODDATA\r\n");
+        logLines.push('> PODDATA');
+        waitingForPodData = true;
         busy = false;
         break;
       case "RADIO ON":
