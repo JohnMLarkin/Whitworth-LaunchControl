@@ -214,6 +214,8 @@ function processCmdQueue() {
           logLines.push(`> ${command}`);
           command = cmdQueue.shift();
         }
+        myPort.write("END\r\n");
+        logLines.push(`> END`);
         busy = false;
         break;
       case "PODLINK OFF":

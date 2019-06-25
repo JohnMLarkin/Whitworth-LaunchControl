@@ -5,7 +5,7 @@ const async = require('async');
 
 const dataTypes = require('./dataTypes');
 
-const missionControlUrl = 'http://missioncontrol.westus2.cloudapp.azure.com';
+const missionControlUrl = 'https://missioncontrol.westus2.cloudapp.azure.com';
 //const missionControlUrl = 'http://localhost:3300';
 
 
@@ -84,6 +84,7 @@ function verifyLaunchCode() {
   launchCodeResponse.style.color = "blue";
   launchCodeResponse.innerHTML = 'Verifying...';
   let id = missionIdEntry.value;
+  console.log(`Mission ID: ${id}`);
   request.post(missionControlUrl + '/verifyLaunchCode/' + id,
     {form: {launchCode: launchCodeEntry.value}},
     function (err, res, body) {
@@ -340,20 +341,11 @@ function changeMissionStatus(event) {
 
 function handleFlightModeSwitch(event) {
   flightModeChangeProcessing = true;
-  var fcID = [];
   if (event.target.checked) {
     let id = missionIdEntry.value;
-    for (let i = 1; i <= numPods; i++) {
-      descriptionField = document.getElementById("pod"+i.toString()+"_FC_ID");
-      fcID[i-1] = descriptionField.value; 
-    }
     cmdQueue.push(`MISSIONID=${id}`);
+    sendFlightComputerConfig();
     cmdQueue.push(`TRANSPERIOD=${transmitPeriod}`);
-    for (let i = 1; i <= numPods; i++) {
-      if (fcID[i-1].length>0) {
-        cmdQueue.push(`POD ${i} = ${fcID[i-1]} ${numBytesPods[i]}`);
-      }
-    }
     cmdQueue.push("FLIGHT_MODE ON");
   } else {
     cmdQueue.push("FLIGHT_MODE OFF");
