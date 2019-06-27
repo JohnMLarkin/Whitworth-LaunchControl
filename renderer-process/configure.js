@@ -93,6 +93,8 @@ function loadPodTable(id) {
       labelField.type = "text";
       labelField.size = 25;
       labelField.id = 'pod'+id.toString()+'item'+i.toString()+'Label';
+      labelField.pattern = "[A-Za-z0-9 \(\)\^\/]{1,25}";
+      labelField.title = "Only alphanumeric, spaces, (, ), /, and ^ are allowed.  1-25 characters required."
       labelField.value = pT[id-1][i-1][1];
       labelCell.appendChild(labelField);
       labelField.addEventListener('change', changeLabel.bind(null, event, id, i), false);
@@ -193,7 +195,13 @@ function changeDataType(event, pod, item) {
 
 function changeLabel(event, pod, item) {
   var itemLabel = document.getElementById('pod'+pod.toString()+'item'+item.toString()+'Label');
-  podTable[pod-1][item-1][1] = itemLabel.value;
+  var patt = /^[A-Za-z0-9 \(\)\^\/]{1,25}$/;  // Allowed characters are A-Z, a-z, 0-9, (, ), /, and ^. Length is 1-25
+  if (itemLabel.value.match(patt)) {
+    podTable[pod-1][item-1][1] = itemLabel.value; // Update
+    
+  } else {
+    itemLabel.value = podTable[pod-1][item-1][1];  // Reset to previous value
+  }
 }
 
 function deleteAllItems(event, selectedPod) {
@@ -247,6 +255,8 @@ function insertItem(event, selectedPod)
   labelField.type = "text";
   labelField.size = 25;
   labelField.id = 'pod'+selectedPod.toString()+'item'+(numRows-1).toString()+'Label';
+  labelField.pattern = "[A-Za-z0-9 \(\)\^\/]{1,25}";
+  labelField.title = "Only alphanumeric, spaces, (, ), /, and ^ are allowed.  1-25 characters required."
   labelCell.appendChild(labelField);
   labelField.addEventListener('change', changeLabel.bind(null, event, selectedPod, numRows-1), false);
 

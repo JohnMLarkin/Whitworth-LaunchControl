@@ -20,10 +20,10 @@ document.getElementById('manifestCheckSection').classList.remove('is-shown');
 document.getElementById('statusCheckSection').classList.remove('is-shown');
 document.getElementById('modeCheckSection').classList.remove('is-shown');
 
-dataTypeDict = {};
-for (let i = 0; i < dataTypes.length; i++) {
-  dataTypeDict[dataTypes[i][0]] = i;
-}
+// dataTypeDict = {};
+// for (let i = 0; i < dataTypes.length; i++) {
+//   dataTypeDict[dataTypes[i][0]] = i;
+// }
 
 function sum(total, num) {
     return total + num;
@@ -249,7 +249,7 @@ async function importManifest() {
       podTable[i][j][0] = j + 1;
       podTable[i][j][1] = manifest[i].dataDescriptions[j];
       console.log(manifest[i].dataTypes[j]);
-      podTable[i][j][2] = String(dataTypeDict[manifest[i].dataTypes[j]]);
+      podTable[i][j][2] = String(dataTypes[manifest[i].dataTypes[j]]);
     }
   }
   console.log('Generated podTable from remote:');
