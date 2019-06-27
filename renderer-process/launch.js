@@ -20,10 +20,10 @@ document.getElementById('manifestCheckSection').classList.remove('is-shown');
 document.getElementById('statusCheckSection').classList.remove('is-shown');
 document.getElementById('modeCheckSection').classList.remove('is-shown');
 
-dataTypeDict = {};
-for (let i = 0; i < dataTypes.length; i++) {
-  dataTypeDict[dataTypes[i][0]] = i;
-}
+// dataTypeDict = {};
+// for (let i = 0; i < dataTypes.length; i++) {
+//   dataTypeDict[dataTypes[i][0]] = i;
+// }
 
 function sum(total, num) {
     return total + num;
@@ -84,6 +84,7 @@ function verifyLaunchCode() {
   launchCodeResponse.style.color = "blue";
   launchCodeResponse.innerHTML = 'Verifying...';
   let id = missionIdEntry.value;
+  console.log(`Mission ID: ${id}`);
   request.post(missionControlUrl + '/verifyLaunchCode/' + id,
     {form: {launchCode: launchCodeEntry.value}},
     function (err, res, body) {
@@ -248,7 +249,7 @@ async function importManifest() {
       podTable[i][j][0] = j + 1;
       podTable[i][j][1] = manifest[i].dataDescriptions[j];
       console.log(manifest[i].dataTypes[j]);
-      podTable[i][j][2] = String(dataTypeDict[manifest[i].dataTypes[j]]);
+      podTable[i][j][2] = String(dataTypes[manifest[i].dataTypes[j]]);
     }
   }
   console.log('Generated podTable from remote:');
@@ -340,20 +341,11 @@ function changeMissionStatus(event) {
 
 function handleFlightModeSwitch(event) {
   flightModeChangeProcessing = true;
-  var fcID = [];
   if (event.target.checked) {
     let id = missionIdEntry.value;
-    for (let i = 1; i <= numPods; i++) {
-      descriptionField = document.getElementById("pod"+i.toString()+"_FC_ID");
-      fcID[i-1] = descriptionField.value; 
-    }
     cmdQueue.push(`MISSIONID=${id}`);
+    sendFlightComputerConfig();
     cmdQueue.push(`TRANSPERIOD=${transmitPeriod}`);
-    for (let i = 1; i <= numPods; i++) {
-      if (fcID[i-1].length>0) {
-        cmdQueue.push(`POD ${i} = ${fcID[i-1]} ${numBytesPods[i]}`);
-      }
-    }
     cmdQueue.push("FLIGHT_MODE ON");
   } else {
     cmdQueue.push("FLIGHT_MODE OFF");

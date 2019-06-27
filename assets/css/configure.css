@@ -24,3 +24,7 @@
 .subsection-box .mdl-tooltip {
   margin-left: -300px;
 }
+
+input:invalid {
+  border-color: red;
+}
