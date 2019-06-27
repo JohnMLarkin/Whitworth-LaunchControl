@@ -35,6 +35,9 @@ var waitingForHandshake = false;
 var waitingForFlightModeOk = false;
 var flightModeChangeProcessing = false;
 var waitingForPodData = false;
+var podDataPodIndex;
+var podDataLength;
+var podDataArray = [];
 
 // Search for Bluetooth port
 function autoDetectPort() {
@@ -171,7 +174,19 @@ function receiveSerialData(data) {
     busy = false;
   } else if (waitingForPodData) {
     waitingForPodData = false;
-    //process pod data
+    podDataPodIndex = Number(data.substring(data.indexOf("PODDATA")+1));
+    podDataLength = Number(data.substring(data.indexOf("=")+1));
+    var n0 = data.indexOf("=")
+    var n;
+    for (let i = 0; i < podDataLength; i++) {
+      n = n0 + 3 * i;
+      podDataArray.push(data.substring(n+2,n+4));
+    }
+    console.log(podDataPodIndex);
+    console.log(podDataLength);
+    console.log(n0);
+    console.log(podDataArray[0]);
+    console.log(podDataArray[1]);
   } else {
     if ((data=="OK") || (data=="ERROR")) busy = false;
   }
