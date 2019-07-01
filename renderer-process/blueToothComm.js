@@ -174,19 +174,15 @@ function receiveSerialData(data) {
     busy = false;
   } else if (waitingForPodData) {
     waitingForPodData = false;
-    podDataPodIndex = Number(data.substring(data.indexOf("PODDATA")+1));
+    console.log(data);
+    podDataPodIndex = 1;
     podDataLength = Number(data.substring(data.indexOf("=")+1));
-    var n0 = data.indexOf("=")
+    var n0 = data.indexOf("=");
     var n;
     for (let i = 0; i < podDataLength; i++) {
       n = n0 + 3 * i;
       podDataArray.push(data.substring(n+2,n+4));
     }
-    console.log(podDataPodIndex);
-    console.log(podDataLength);
-    console.log(n0);
-    console.log(podDataArray[0]);
-    console.log(podDataArray[1]);
   } else {
     if ((data=="OK") || (data=="ERROR")) busy = false;
   }
@@ -242,9 +238,9 @@ function processCmdQueue() {
         logLines.push('> PODLINK OFF');
         busy = false;
         break;
-      case "PODDATA":
-        myPort.write("PODDATA\r\n");
-        logLines.push('> PODDATA');
+      case "PODDATA 1":
+        myPort.write("PODDATA 1\r\n");
+        logLines.push('> PODDATA 1');
         waitingForPodData = true;
         busy = false;
         break;

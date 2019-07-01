@@ -3,7 +3,7 @@ const settings = require('electron-settings');
 const dataTypes = require('./dataTypes');
 
 //populates monitor page with pod info
-function setMissionId(event) {
+function setMissionIdMonitor(event) {
   document.getElementById("setupConfigReminder").innerHTML = "";
   var idField = document.getElementById("missionID");
   var descriptionField = document.getElementById("missionDescription");
@@ -50,12 +50,12 @@ function setMissionId(event) {
 
 //request data from CM
 function refreshPodData(event, selectedPod) {
-
+  cmdQueue.push("PODDATA" + " 1");    //+ toString(selectedPod)
 }
 
 //listener for mission id entry
 const missionIDEntry = document.getElementById('missionID');
-missionIDEntry.addEventListener('change', setMissionId.bind(null, event), false);
+missionIDEntry.addEventListener('change', setMissionIdMonitor.bind(null, event), false);
 
 //listeners for refresh buttons
 const refreshPod1DataBtn = document.getElementById('refreshPod1');
