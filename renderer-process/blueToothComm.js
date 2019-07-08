@@ -5,6 +5,19 @@
 const serialport = require('serialport');
 const Readline = require('@serialport/parser-readline');
 
+const dataTypes = require('./renderer-process/dataTypes');
+
+const dataTypeDefinitions = {
+  'uint8': {size: 1, converter:'readUInt8'},
+  'int8': {size: 1, converter: 'readInt8'},
+  'uint16': {size: 2, converter: 'readUInt16LE'},
+  'int16': {size: 2, converter: 'readInt16LE'},
+  'uint32': {size: 4, converter: 'readUInt32LE'},
+  'int32': {size: 4, converter: 'readInt32LE'},
+  'float': {size: 4, converter: 'readFloatLE'},
+  'double': {size: 8, converter: 'readDoubleLE'}
+};
+
 var portFound = false;
 var portName;
 var portConnected = false;
@@ -36,6 +49,7 @@ var waitingForFlightModeOk = false;
 var flightModeChangeProcessing = false;
 var waitingForPodData = false;
 var podDataPodIndex;
+var podDataElement = 0;
 var podDataLength;
 var podDataArray = [];
 
@@ -173,16 +187,52 @@ function receiveSerialData(data) {
     waitingForFlightModeOk = false;
     busy = false;
   } else if (waitingForPodData) {
-    waitingForPodData = false;
-    console.log(data);
-    podDataPodIndex = 1;
-    podDataLength = Number(data.substring(data.indexOf("=")+1));
-    var n0 = data.indexOf("=");
-    var n;
-    for (let i = 0; i < podDataLength; i++) {
-      n = n0 + 3 * i;
-      podDataArray.push(data.substring(n+2,n+4));
+    switch (podDataElement) {
+      case 0:
+      break;
+      case 1:
+      podDataLength = Number(data.substring(data.indexOf("=")+1));            //"BYTES=#"
+      if (podDataLength == 0) {
+        //no data recieved, skip next case 
+        podDataElement++;
+        console.log("No data received.");
+      }
+      break;
+      case 2:
+      var n0 = data.indexOf("=");                                             //"DATA= __ __ __ ..."
+      var n;
+      var dataSnip;
+      for (let i = 0; i < podDataLength; i++) {
+        n = n0 + 3 * i;
+        dataSnip = data.substring(n+2,n+4);
+        podDataArray.push(parseInt(dataSnip, 16)); 
+        console.log("Data: " + dataSnip);
+      }
+
+      var table = document.getElementById('pod'+podDataPodIndex.toString()+'Table_monitor');
+
+      var podDataArrayIndex = 0;
+      var dataType;
+      var value;
+      for (let i = 1; i < table.rows.length; i++) {
+        dataType = document.getElementById('pod'+podDataPodIndex.toString()+'item'+i.toString()+'Type').value;              //get data type for this row
+        value = 0;
+        for (let j = 0; j < dataTypes[dataType][2]; j++) {
+          document.getElementById('pod'+podDataPodIndex.toString()+'item'+i.toString()+'bytes' + '_monitor').innerHTML += podDataArray[podDataArrayIndex++].toString(16).toUpperCase() + "\xa0\xa0";
+        }
+        var byteBuffer = Buffer.from(podDataArray, podDataArrayIndex - dataTypes[dataType][2], dataTypes[dataType][2]);
+        value = byteBuffer[dataTypeDefinitions[dataTypes[dataType][0]].converter](0);
+        document.getElementById('pod'+podDataPodIndex.toString()+'item'+i.toString()+'value' + '_monitor').innerHTML = value;
+        console.log(value);
+      }
+      break;
+      default: 
+        waitingForPodData = false;
+        busy = false;
+        podDataElement = -1;
     }
+    podDataElement++;
+
   } else {
     if ((data=="OK") || (data=="ERROR")) busy = false;
   }
@@ -241,8 +291,8 @@ function processCmdQueue() {
       case "PODDATA 1":
         myPort.write("PODDATA 1\r\n");
         logLines.push('> PODDATA 1');
+        podDataPodIndex = 1;
         waitingForPodData = true;
-        busy = false;
         break;
       case "RADIO ON":
         myPort.write("RADIO ON\r\n");
