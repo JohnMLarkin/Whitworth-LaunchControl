@@ -48,6 +48,7 @@ var waitingForHandshake = false;
 var waitingForFlightModeOk = false;
 var flightModeChangeProcessing = false;
 var waitingForPodData = false;
+var waitingForPodLinkOk = false;
 var podDataPodIndex;
 var podDataElement = 0;
 var podDataLength;
@@ -255,23 +256,19 @@ function processCmdQueue() {
         myPort.write("GPS ON\r\n");
         logLines.push('> GPS ON');
         document.getElementById('button-GPS_update').disabled = false;
-        busy = false;
         break;
       case "GPS OFF":
         myPort.write("GPS OFF\r\n");
         logLines.push('> GPS OFF');
         document.getElementById('button-GPS_update').disabled = true;
-        busy = false;
         break;
       case "SATLINK ON":
         myPort.write("SATLINK ON\r\n");
         logLines.push('> SATLINK ON');
-        busy = false;
         break;
       case "SATLINK OFF":
         myPort.write("SATLINK OFF\r\n");
         logLines.push('> SATLINK OFF');
-        busy = false;
         break;
       case "PODLINK ON":
         while (command != "END") {
@@ -281,12 +278,10 @@ function processCmdQueue() {
         }
         myPort.write("END\r\n");
         logLines.push(`> END`);
-        busy = false;
         break;
       case "PODLINK OFF":
         myPort.write("PODLINK OFF\r\n");
         logLines.push('> PODLINK OFF');
-        busy = false;
         break;
       case "PODDATA 1":
         myPort.write("PODDATA 1\r\n");
@@ -339,12 +334,10 @@ function processCmdQueue() {
           let p = Number(command.substring(command.indexOf("=")+1));
           myPort.write(`TRANSPERIOD ${p.toFixed(0)}\r\n`);
           logLines.push(`> TRANSPERIOD ${p.toFixed(0)}`);
-          busy = false;
         } else if (command.includes("MISSIONID")) {
           let p = Number(command.substring(command.indexOf("=")+1));
           myPort.write(`MISSIONID ${p.toFixed(0)}\r\n`);
           logLines.push(`> MISSIONID ${p.toFixed(0)}`);
-          busy = false;
         } else if (command.includes("ERROR")) {
           let p = command.substring(command.indexOf(":")+1);
           logLines.push(`> ERROR: ${p}`);
