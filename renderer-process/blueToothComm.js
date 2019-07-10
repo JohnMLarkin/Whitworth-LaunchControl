@@ -289,14 +289,6 @@ function processCmdQueue() {
         myPort.write("PODLINK OFF\r\n");
         logLines.push('> PODLINK OFF');
         break;
-        /*
-        case "PODDATA 1":
-        myPort.write("PODDATA 1\r\n");
-        logLines.push('> PODDATA 1');
-        podDataPodIndex = 1;
-        waitingForPodData = true;
-        break;
-        */
       case "RADIO ON":
         myPort.write("RADIO ON\r\n");
         logLines.push('> RADIO ON');

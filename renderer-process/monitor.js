@@ -5,7 +5,7 @@ const dataTypes = require('./dataTypes');
 //populates monitor page with pod info
 function setMissionIdMonitor(event) {
   document.getElementById("setupConfigReminder").innerHTML = "";  //hides setup reminder block
-  var numberOfPods = 2;
+  var numberOfPods = 6;
   for (let i = 0; i < numberOfPods; i++) {
     setupPodMonitor(i + 1);
   }
@@ -88,9 +88,34 @@ refreshPod1DataBtn.addEventListener('click', refreshPodData.bind(null, event, 1)
 const refreshPod2DataBtn = document.getElementById('refreshPod2');
 refreshPod2DataBtn.addEventListener('click', refreshPodData.bind(null, event, 2), false);
 
+const refreshPod3DataBtn = document.getElementById('refreshPod3');
+refreshPod3DataBtn.addEventListener('click', refreshPodData.bind(null, event, 3), false);
+
+const refreshPod4DataBtn = document.getElementById('refreshPod4');
+refreshPod4DataBtn.addEventListener('click', refreshPodData.bind(null, event, 4), false);
+
+const refreshPod5DataBtn = document.getElementById('refreshPod5');
+refreshPod5DataBtn.addEventListener('click', refreshPodData.bind(null, event, 5), false);
+
+const refreshPod6DataBtn = document.getElementById('refreshPod6');
+refreshPod6DataBtn.addEventListener('click', refreshPodData.bind(null, event, 6), false);
+
+
 //listener for monitor tabs
 const monitorPod1 = document.getElementById('pod1monitor-toggle');
 monitorPod1.addEventListener('click', fillPodTable_monitor.bind(null, 1));
 
 const monitorPod2 = document.getElementById('pod2monitor-toggle');
 monitorPod2.addEventListener('click', fillPodTable_monitor.bind(null, 2));
+
+const monitorPod3 = document.getElementById('pod3monitor-toggle');
+monitorPod3.addEventListener('click', fillPodTable_monitor.bind(null, 3));
+
+const monitorPod4 = document.getElementById('pod4monitor-toggle');
+monitorPod4.addEventListener('click', fillPodTable_monitor.bind(null, 4));
+
+const monitorPod5 = document.getElementById('pod5monitor-toggle');
+monitorPod5.addEventListener('click', fillPodTable_monitor.bind(null, 5));
+
+const monitorPod6 = document.getElementById('pod6monitor-toggle');
+monitorPod6.addEventListener('click', fillPodTable_monitor.bind(null, 6));
