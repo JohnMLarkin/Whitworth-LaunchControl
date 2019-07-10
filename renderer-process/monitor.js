@@ -5,9 +5,16 @@ const dataTypes = require('./dataTypes');
 //populates monitor page with pod info
 function setMissionIdMonitor(event) {
   document.getElementById("setupConfigReminder").innerHTML = "";  //hides setup reminder block
-  document.getElementById("pod1Description_monitor").innerHTML = document.getElementById("pod1Description").value + " Pod";
-  document.getElementById("pod1_FC_ID_monitor").innerHTML = "NI: " + document.getElementById("pod1_FC_ID").value;
-  fillPodTable_monitor(1);
+  var numberOfPods = 2;
+  for (let i = 0; i < numberOfPods; i++) {
+    setupPodMonitor(i + 1);
+  }
+}
+
+function setupPodMonitor(selectedPod) {
+  document.getElementById("pod" + selectedPod.toString() + "Description_monitor").innerHTML = document.getElementById("pod" + selectedPod.toString() + "Description").value + " Pod";
+  document.getElementById("pod" + selectedPod.toString() + "_FC_ID_monitor").innerHTML = "NI: " + document.getElementById("pod" + selectedPod.toString() + "_FC_ID").value;
+  fillPodTable_monitor(selectedPod);
 }
 
 //creates tables
@@ -54,6 +61,7 @@ function fillPodTable_monitor(selectedPod) {
   }
 }
 
+/*
 function emptyPodTable_monitor(selectedPod) {
   var table = document.getElementById('pod'+selectedPod.toString()+'Table_monitor');
   for (let i = 1; i < table.rows.length; i++) {
@@ -61,11 +69,12 @@ function emptyPodTable_monitor(selectedPod) {
     document.getElementById('pod'+selectedPod.toString()+'item'+i.toString()+'value' + '_monitor').innerHTML = "NA";    //clear value field
   }
 }
+*/
 
 //request data from CM
 function refreshPodData(event, selectedPod) {
-  fillPodTable_monitor(1);
-  cmdQueue.push("PODDATA 1");    //+ toString(selectedPod)
+  fillPodTable_monitor(selectedPod);
+  cmdQueue.push("PODDATA " + selectedPod.toString());
 }
 
 //listener for mission id entry
@@ -76,6 +85,12 @@ missionIDEntryMonitor.addEventListener('change', setMissionIdMonitor.bind(null, 
 const refreshPod1DataBtn = document.getElementById('refreshPod1');
 refreshPod1DataBtn.addEventListener('click', refreshPodData.bind(null, event, 1), false);
 
+const refreshPod2DataBtn = document.getElementById('refreshPod2');
+refreshPod2DataBtn.addEventListener('click', refreshPodData.bind(null, event, 2), false);
+
 //listener for monitor tabs
 const monitorPod1 = document.getElementById('pod1monitor-toggle');
 monitorPod1.addEventListener('click', fillPodTable_monitor.bind(null, 1));
+
+const monitorPod2 = document.getElementById('pod2monitor-toggle');
+monitorPod2.addEventListener('click', fillPodTable_monitor.bind(null, 2));

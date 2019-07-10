@@ -9,6 +9,7 @@
     </header>
     <div id="setupConfigReminder">  (Please setup mission in the Configure Mission tab to get started)</div>
     <div class="subsection">
+      <!--POD 1-->
       <div class="subsection-wrapper">
         <button id="pod1monitor-toggle" class="js-container-target subsection-toggle-button">Pod 1 Monitor
         </button>
@@ -29,6 +30,42 @@
             </div>
           </div>
           <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp" id="pod1Table_monitor">
+            <thead>
+              <tr>
+                <th class="mdl-data-table__cell--non-numeric">Item</th>
+                <th class="mdl-data-table__cell--non-numeric">Label</th>
+                <th class="mdl-data-table__cell--non-numeric">Type</th>
+                <th>Bytes (hexadecimal)</th>
+                <th class="mdl-data-table__cell--non-numeric">Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <!--POD 2-->
+      <div class="subsection-wrapper">
+        <button id="pod2monitor-toggle" class="js-container-target subsection-toggle-button">Pod 2 Monitor
+        </button>
+        <div class="subsection-box">
+          <div class="mdl-grid mdl-grid--no-spacing">
+            <div class="mdl-cell mdl-cell--6-col">
+              <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored mdl-js-ripple-effect" id="refreshPod2">
+                <i class="material-icons">refresh</i>
+              </button>
+              <div class="mdl-textfield mdl-textfield--floating-label">
+                <p id="pod2Description_monitor">Pod 2 description..</p>
+              </div>
+            </div>
+            <div class="mdl-cell mdl-cell--6-col">
+              <div class="mdl-textfield mdl-textfield--floating-label">
+                <p id="pod2_FC_ID_monitor">Flight Computer ID..</p>
+              </div>
+            </div>
+          </div>
+          <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp" id="pod2Table_monitor">
             <thead>
               <tr>
                 <th class="mdl-data-table__cell--non-numeric">Item</th>

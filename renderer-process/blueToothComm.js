@@ -289,12 +289,14 @@ function processCmdQueue() {
         myPort.write("PODLINK OFF\r\n");
         logLines.push('> PODLINK OFF');
         break;
-      case "PODDATA 1":
+        /*
+        case "PODDATA 1":
         myPort.write("PODDATA 1\r\n");
         logLines.push('> PODDATA 1');
         podDataPodIndex = 1;
         waitingForPodData = true;
         break;
+        */
       case "RADIO ON":
         myPort.write("RADIO ON\r\n");
         logLines.push('> RADIO ON');
@@ -336,7 +338,13 @@ function processCmdQueue() {
         });
         break;
       default:
-        if (command.includes("TRANSPERIOD")) {
+        if (command.includes("PODDATA")) {
+          let podNum = Number(command.substring(8,9));
+          myPort.write("PODDATA " + podNum.toString() + "\r\n");
+          logLines.push('> PODDATA ' + podNum.toString());
+          podDataPodIndex = podNum;
+          waitingForPodData = true;
+        } else if (command.includes("TRANSPERIOD")) {
           let p = Number(command.substring(command.indexOf("=")+1));
           myPort.write(`TRANSPERIOD ${p.toFixed(0)}\r\n`);
           logLines.push(`> TRANSPERIOD ${p.toFixed(0)}`);
