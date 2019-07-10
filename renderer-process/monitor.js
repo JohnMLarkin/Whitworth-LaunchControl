@@ -58,11 +58,13 @@ function emptyPodTable_monitor(selectedPod) {
   var table = document.getElementById('pod'+selectedPod.toString()+'Table_monitor');
   for (let i = 1; i < table.rows.length; i++) {
     document.getElementById('pod'+selectedPod.toString()+'item'+i.toString()+'bytes' + '_monitor').innerHTML = "";    //clear bytes field
+    document.getElementById('pod'+selectedPod.toString()+'item'+i.toString()+'value' + '_monitor').innerHTML = "NA";    //clear value field
   }
 }
 
 //request data from CM
 function refreshPodData(event, selectedPod) {
+  fillPodTable_monitor(1);
   cmdQueue.push("PODDATA 1");    //+ toString(selectedPod)
 }
 
@@ -73,7 +75,6 @@ missionIDEntryMonitor.addEventListener('change', setMissionIdMonitor.bind(null, 
 //listeners for refresh buttons
 const refreshPod1DataBtn = document.getElementById('refreshPod1');
 refreshPod1DataBtn.addEventListener('click', refreshPodData.bind(null, event, 1), false);
-refreshPod1DataBtn.addEventListener('click', emptyPodTable_monitor.bind(null, 1));
 
 //listener for monitor tabs
 const monitorPod1 = document.getElementById('pod1monitor-toggle');

@@ -203,6 +203,7 @@ function receiveSerialData(data) {
       var n0 = data.indexOf("=");                                             //"DATA= __ __ __ ..."
       var n;
       var dataSnip;
+      podDataArray = [];                                                      //clear data array
       for (let i = 0; i < podDataLength; i++) {
         n = n0 + 3 * i;
         dataSnip = data.substring(n+2,n+4);
@@ -213,16 +214,21 @@ function receiveSerialData(data) {
       var table = document.getElementById('pod'+podDataPodIndex.toString()+'Table_monitor');
 
       var podDataArrayIndex = 0;
-      var dataType;
+      var podDataType;
       var value;
+      var byteBuffer = Buffer.from(podDataArray)  //create buffer object from data array, that will be interpreted based on data type
       for (let i = 1; i < table.rows.length; i++) {
-        dataType = document.getElementById('pod'+podDataPodIndex.toString()+'item'+i.toString()+'Type').value;              //get data type for this row
+        podDataType = document.getElementById('pod'+podDataPodIndex.toString()+'item'+i.toString()+'Type').value;              //get data type for this row
         value = 0;
-        for (let j = 0; j < dataTypes[dataType][2]; j++) {
+        document.getElementById('pod'+podDataPodIndex.toString()+'item'+i.toString()+'bytes' + '_monitor').innerHTML = " "; //empty bytes field
+        for (let j = 0; j < dataTypes[podDataType][2]; j++) {
           document.getElementById('pod'+podDataPodIndex.toString()+'item'+i.toString()+'bytes' + '_monitor').innerHTML += podDataArray[podDataArrayIndex++].toString(16).toUpperCase() + "\xa0\xa0";
         }
-        var byteBuffer = Buffer.from(podDataArray, podDataArrayIndex - dataTypes[dataType][2], dataTypes[dataType][2]);
-        value = byteBuffer[dataTypeDefinitions[dataTypes[dataType][0]].converter](0);
+        console.log(podDataArrayIndex.toString() + " " + dataTypes[podDataType][2].toString());
+        value = byteBuffer[dataTypeDefinitions[dataTypes[podDataType][0]].converter](podDataArrayIndex - dataTypes[podDataType][2]);
+        if ((dataTypes[podDataType][0]=='float')||(dataTypes[podDataType][0]=='double')) {
+          value = value.toPrecision(4);  
+        }
         document.getElementById('pod'+podDataPodIndex.toString()+'item'+i.toString()+'value' + '_monitor').innerHTML = value;
         console.log(value);
       }
