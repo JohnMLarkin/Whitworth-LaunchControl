@@ -243,6 +243,7 @@ async function importManifest() {
   for (let i = 0; i < numPods; i++) {
     settings.set('missions.' + id + '.pod' + (i+1).toString() + 'description', manifest[i].podDescription);
     settings.set('missions.' + id + '.pod' + (i+1).toString() + '_fc_id', manifest[i].fc_id);
+    fc_id[i] = manifest[i].fc_id;
     podTable[i] = [];
     for (let j = 0; j < manifest[i].dataTypes.length; j++) {
       podTable[i][j] = [];

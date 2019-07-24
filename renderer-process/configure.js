@@ -47,6 +47,7 @@ function setMissionId(event) {
     for (i=1; i<=numPods; i++) {
       descriptionField = document.getElementById("pod"+i.toString()+"_FC_ID");
       descriptionField.value = settings.get('missions.'+id.toString()+'.pod'+i.toString()+'_fc_id');
+      fc_id[i] = descriptionField.value;
     }
 
     // Need to trigger floating label to "float" when value set by code
@@ -67,6 +68,7 @@ function setMissionId(event) {
       descriptionField = document.getElementById("pod"+i.toString()+"_FC_ID");
       descriptionField.value = ""; 
       settings.set('missions.'+id.toString()+'.pod'+i.toString()+'_fc_id',"");
+      fc_id[i] = "";
     }
   }
   updatePodTables();
@@ -185,6 +187,7 @@ function changePod_FC_ID(event, pod) {
   var id = idField.value;
   var fc_id_field = document.getElementById("pod"+pod.toString()+"_FC_ID");
   settings.set('missions.'+id.toString()+'.pod'+pod.toString()+'_fc_id', fc_id_field.value);
+  fc_id[pod] = fc_id_field.value;
 }
 
 function changeDataType(event, pod, item) {
