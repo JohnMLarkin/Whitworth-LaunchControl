@@ -44,7 +44,7 @@ function updateMission(event) {
       var total = 0;
       for (let j = 0; j < numRows; j++) {
         var typeCode = podTable[i][j][2];
-        total = total + dataTypes[typeCode][2];
+        total = total + dataTypes[Number(typeCode)][2];
       }
       if (total>0) {
         numBytesPods[i+1] = total + 1;
@@ -121,6 +121,10 @@ async function verifyManifest() {
   let remoteManifest = await getManifest();
   localManifestJSON.innerHTML = JSON.stringify(localManifest);
   remoteManifestJSON.innerHTML = JSON.stringify(remoteManifest);
+  console.log("Local manifest:")
+  console.log(localManifest)
+  console.log("Remote manifest:")
+  console.log(remoteManifest)
   manifestVerified = _util.isEqual(localManifest, remoteManifest);
   if (manifestVerified) {
     manifestVerifyStatus.style.color = "green";
@@ -240,20 +244,19 @@ async function importManifest() {
   let id = missionIdEntry.value;
   let podTable = [];
   let numPods = manifest.length;
+  let dataTypeFirstColumn = dataTypes.map(function(value,index) {return value[0];}); 
   for (let i = 0; i < numPods; i++) {
     settings.set('missions.' + id + '.pod' + (i+1).toString() + 'description', manifest[i].podDescription);
     settings.set('missions.' + id + '.pod' + (i+1).toString() + '_fc_id', manifest[i].fc_id);
+    fc_id[i] = manifest[i].fc_id;
     podTable[i] = [];
     for (let j = 0; j < manifest[i].dataTypes.length; j++) {
       podTable[i][j] = [];
       podTable[i][j][0] = j + 1;
       podTable[i][j][1] = manifest[i].dataDescriptions[j];
-      console.log(manifest[i].dataTypes[j]);
-      podTable[i][j][2] = String(dataTypes[manifest[i].dataTypes[j]]);
+      podTable[i][j][2] = dataTypeFirstColumn.indexOf(manifest[i].dataTypes[j]);
     }
   }
-  console.log('Generated podTable from remote:');
-  console.log(podTable);
   settings.set('missions.' + id + '.podTable', podTable);
   verifyManifest();
 }
@@ -276,6 +279,7 @@ async function makeManifest() {
         manifest[i].dataTypes = [];
         for (let j = 0; j < podTable[i].length; j++) {
           manifest[i].dataDescriptions[j] = podTable[i][j][1];
+          console.log(podTable[i][j])
           manifest[i].dataTypes[j] = dataTypes[podTable[i][j][2]][0];
         }
       }
