@@ -31,6 +31,6 @@
     "getmdl-select": "^2.0.1",
     "request": "^2.88.0",
     "serialport": "^7.1.5",
-    "underscore": "^1.9.1"
+    "underscore": "^1.12.1"
   }
 }
